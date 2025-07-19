@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { render } from 'ink'
-import { sampleSlides, SlideShow } from './index.js'
+import { SlideShow, sampleSlides } from './index.js'
 
 // Raw modeがサポートされているかチェック
 if (process.stdin.isTTY) {

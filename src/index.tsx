@@ -35,7 +35,7 @@ Easy, right?`,
   {
     title: 'Navigation',
     content: `← → : Previous/Next slide
-0   : Jump to first slide  
+0   : Jump to first slide
 9   : Jump to last slide
 q   : Quit the presentation
 
@@ -49,6 +49,6 @@ Made with React Ink 🌈`,
   },
 ]
 
+export { Slide } from './components/Slide.js'
 // コンポーネントのエクスポート
 export { SlideShow } from './components/SlideShow.js'
-export { Slide } from './components/Slide.js'

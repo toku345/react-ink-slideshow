@@ -1,6 +1,12 @@
 // サンプルスライドデータのエクスポート
 export const sampleSlides = [
   {
+    type: 'title' as const,
+    title: 'React Ink Slideshow',
+    subtitle: 'Terminal-based presentation tool',
+    author: 'Your Name',
+  },
+  {
     title: 'Welcome to React Ink Slideshow! 🎉',
     content: `This is a terminal-based slideshow presentation tool.
 
@@ -52,3 +58,4 @@ Made with React Ink 🌈`,
 export { Slide } from './components/Slide.js'
 // コンポーネントのエクスポート
 export { SlideShow } from './components/SlideShow.js'
+export { TitleSlide } from './components/TitleSlide.js'

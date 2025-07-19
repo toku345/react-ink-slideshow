@@ -1,0 +1,47 @@
+{
+  "name": "react-ink-slideshow",
+  "version": "1.0.0",
+  "description": "Terminal-based slideshow presentation tool built with React Ink",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx src/index.tsx",
+    "build": "tsc",
+    "test": "vitest",
+    "lint": "oxlint src",
+    "format": "biome format --write src",
+    "typecheck": "tsc --noEmit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/toku345/react-ink-slideshow.git"
+  },
+  "keywords": [
+    "terminal",
+    "slideshow",
+    "presentation",
+    "react-ink",
+    "cli"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/toku345/react-ink-slideshow/issues"
+  },
+  "homepage": "https://github.com/toku345/react-ink-slideshow#readme",
+  "dependencies": {
+    "@types/node": "^24.0.15",
+    "@types/react": "^19.1.8",
+    "ink": "^6.0.1",
+    "react": "^19.1.0",
+    "tsx": "^4.20.3",
+    "typescript": "^5.8.3"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.1.2",
+    "@vitest/ui": "^3.2.4",
+    "ink-testing-library": "^4.0.0",
+    "oxlint": "^1.7.0",
+    "vitest": "^3.2.4"
+  }
+}

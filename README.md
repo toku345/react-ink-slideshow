@@ -94,4 +94,4 @@ npm run check  # TypeScript、テスト、フォーマット、リントを実�
 
 ## ライセンス
 
-ISC
+MIT

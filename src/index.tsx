@@ -1,5 +1,3 @@
-import { SlideShow } from './components/SlideShow.js'
-
 // サンプルスライドデータのエクスポート
 export const sampleSlides = [
   {

@@ -28,7 +28,7 @@ export const SlideShow: React.FC<SlideShowProps> = ({ slides }) => {
   const progress = ((currentSlide + 1) / slides.length) * 100
 
   return (
-    <Box flexDirection="column" height="100%">
+    <Box flexDirection="column" height={30}>
       {/* スライド本体 */}
       <Box flexGrow={1}>
         <Slide title={currentSlideData.title} content={currentSlideData.content} />

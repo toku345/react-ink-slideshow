@@ -2,11 +2,26 @@ import { Box, Text, useApp } from 'ink'
 import React from 'react'
 import { useKeyboardNavigation } from '../hooks/useKeyboardNavigation.js'
 import { Slide } from './Slide.js'
+import { TitleSlide } from './TitleSlide.js'
 
-interface SlideData {
+interface BaseSlide {
+  type?: 'title' | 'content'
+}
+
+interface TitleSlideData extends BaseSlide {
+  type: 'title'
+  title: string
+  subtitle?: string
+  author?: string
+}
+
+interface ContentSlideData extends BaseSlide {
+  type?: 'content'
   title?: string
   content: string
 }
+
+type SlideData = TitleSlideData | ContentSlideData
 
 interface SlideShowProps {
   slides: SlideData[]
@@ -27,12 +42,23 @@ export const SlideShow: React.FC<SlideShowProps> = ({ slides }) => {
   const currentSlideData = slides[currentSlide]
   const progress = ((currentSlide + 1) / slides.length) * 100
 
+  const renderSlide = () => {
+    if (currentSlideData.type === 'title') {
+      return (
+        <TitleSlide
+          title={currentSlideData.title}
+          subtitle={currentSlideData.subtitle}
+          author={currentSlideData.author}
+        />
+      )
+    }
+    return <Slide title={currentSlideData.title} content={currentSlideData.content} />
+  }
+
   return (
     <Box flexDirection="column" height={30}>
       {/* スライド本体 */}
-      <Box flexGrow={1}>
-        <Slide title={currentSlideData.title} content={currentSlideData.content} />
-      </Box>
+      <Box flexGrow={1}>{renderSlide()}</Box>
 
       {/* フッター */}
       <Box
@@ -47,8 +73,8 @@ export const SlideShow: React.FC<SlideShowProps> = ({ slides }) => {
         {/* プログレスバー */}
         <Box marginBottom={1}>
           <Text>
-            {'━'.repeat(Math.floor((100 - progress) / 5))}
             <Text color="cyan">{'█'.repeat(Math.ceil(progress / 5))}</Text>
+            {'━'.repeat(Math.floor((100 - progress) / 5))}
           </Text>
         </Box>
 

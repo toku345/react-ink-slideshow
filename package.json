@@ -7,10 +7,14 @@
   "scripts": {
     "dev": "tsx src/index.tsx",
     "build": "tsc",
-    "test": "vitest",
-    "lint": "oxlint src",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "oxlint src --silent",
+    "lint:strict": "oxlint src --deny-warnings",
     "format": "biome format --write src",
-    "typecheck": "tsc --noEmit"
+    "format:check": "biome format src",
+    "typecheck": "tsc --noEmit",
+    "check": "npm run typecheck && npm run test && npm run format:check && npm run lint"
   },
   "repository": {
     "type": "git",

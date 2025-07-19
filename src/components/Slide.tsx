@@ -1,5 +1,5 @@
-import React from 'react'
 import { Box, Text } from 'ink'
+import React from 'react'
 
 interface SlideProps {
   title?: string
@@ -9,7 +9,7 @@ interface SlideProps {
 export const Slide: React.FC<SlideProps> = ({ title, content }) => {
   const lines = content.split('\n')
   let inCodeBlock = false
-  const processedLines: JSX.Element[] = []
+  const processedLines: React.JSX.Element[] = []
 
   lines.forEach((line, index) => {
     if (line.startsWith('```')) {
@@ -19,22 +19,19 @@ export const Slide: React.FC<SlideProps> = ({ title, content }) => {
 
     if (inCodeBlock) {
       processedLines.push(
-        <Text key={index} color="green">
-          {'  '}{line}
-        </Text>
+        <Text key={`code-${index}`} color="green">
+          {'  '}
+          {line}
+        </Text>,
       )
     } else if (line.startsWith('#')) {
       processedLines.push(
-        <Text key={index} bold color="cyan">
+        <Text key={`heading-${index}`} bold color="cyan">
           {line}
-        </Text>
+        </Text>,
       )
     } else {
-      processedLines.push(
-        <Text key={index}>
-          {line}
-        </Text>
-      )
+      processedLines.push(<Text key={`text-${index}`}>{line}</Text>)
     }
   })
 
@@ -47,9 +44,7 @@ export const Slide: React.FC<SlideProps> = ({ title, content }) => {
           </Text>
         </Box>
       )}
-      <Box flexDirection="column">
-        {processedLines}
-      </Box>
+      <Box flexDirection="column">{processedLines}</Box>
     </Box>
   )
 }

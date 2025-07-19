@@ -24,7 +24,7 @@
       },
       "style": {
         "noNonNullAssertion": "off",
-        "useImportType": "error"
+        "useImportType": "off"
       },
       "correctness": {
         "noUnusedVariables": "error"

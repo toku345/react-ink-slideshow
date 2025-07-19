@@ -1,7 +1,7 @@
-import React from 'react'
 import { Box, Text, useApp } from 'ink'
-import { Slide } from './Slide.js'
+import React from 'react'
 import { useKeyboardNavigation } from '../hooks/useKeyboardNavigation.js'
+import { Slide } from './Slide.js'
 
 interface SlideData {
   title?: string

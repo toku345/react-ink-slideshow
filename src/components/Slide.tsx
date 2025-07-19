@@ -19,7 +19,7 @@ export const Slide: React.FC<SlideProps> = ({ title, content }) => {
     }
 
     // 各行に一意のIDを生成（コンテンツと行番号を組み合わせ）
-    const lineKey = `${lineNumber}-${line.slice(0, 10)}`
+    const lineKey = `line-${lineNumber}-${line.slice(0, 10).replace(/\s/g, '_')}`
     lineNumber++
 
     if (inCodeBlock) {

@@ -1,5 +1,5 @@
-import { useState } from 'react'
 import { useInput } from 'ink'
+import { useState } from 'react'
 
 interface UseKeyboardNavigationReturn {
   currentSlide: number

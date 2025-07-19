@@ -11,27 +11,32 @@ export const Slide: React.FC<SlideProps> = ({ title, content }) => {
   let inCodeBlock = false
   const processedLines: React.JSX.Element[] = []
 
-  lines.forEach((line, index) => {
+  let lineNumber = 0
+  lines.forEach((line) => {
     if (line.startsWith('```')) {
       inCodeBlock = !inCodeBlock
       return
     }
 
+    // 各行に一意のIDを生成（コンテンツと行番号を組み合わせ）
+    const lineKey = `${lineNumber}-${line.slice(0, 10)}`
+    lineNumber++
+
     if (inCodeBlock) {
       processedLines.push(
-        <Text key={`code-${index}`} color="green">
+        <Text key={lineKey} color="green">
           {'  '}
           {line}
         </Text>,
       )
     } else if (line.startsWith('#')) {
       processedLines.push(
-        <Text key={`heading-${index}`} bold color="cyan">
+        <Text key={lineKey} bold color="cyan">
           {line}
         </Text>,
       )
     } else {
-      processedLines.push(<Text key={`text-${index}`}>{line}</Text>)
+      processedLines.push(<Text key={lineKey}>{line}</Text>)
     }
   })
 

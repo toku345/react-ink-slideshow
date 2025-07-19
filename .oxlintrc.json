@@ -1,0 +1,9 @@
+{
+  "rules": {
+    "no-unused-vars": "error",
+    "no-console": "off",
+    "prefer-const": "error",
+    "no-var": "error"
+  },
+  "ignorePatterns": ["node_modules", "dist", ".git"]
+}

@@ -3,7 +3,7 @@
     "target": "ES2022",
     "module": "Node16",
     "lib": ["ES2022"],
-    "jsx": "react",
+    "jsx": "react-jsx",
     "declaration": true,
     "declarationMap": true,
     "outDir": "./dist",

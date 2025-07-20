@@ -1,8 +1,9 @@
 import { render } from 'ink-testing-library'
 import { describe, expect, it } from 'vitest'
 import { SlideShow } from '../src/components/SlideShow.js'
+import type { SlideData } from '../src/types/slide.js'
 
-const testSlides = [
+const testSlides: SlideData[] = [
   {
     title: 'Welcome',
     content: 'This is the first slide',

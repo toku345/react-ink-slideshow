@@ -1,7 +1,9 @@
+import type { SlideData } from './types/slide.js'
+
 // サンプルスライドデータのエクスポート
-export const sampleSlides = [
+export const sampleSlides: SlideData[] = [
   {
-    type: 'title' as const,
+    type: 'title',
     title: 'React Ink Slideshow',
     subtitle: 'Terminal-based presentation tool',
     author: 'Your Name',
@@ -59,3 +61,6 @@ export { Slide } from './components/Slide.js'
 // コンポーネントのエクスポート
 export { SlideShow } from './components/SlideShow.js'
 export { TitleSlide } from './components/TitleSlide.js'
+
+// 型定義のエクスポート
+export type { ContentSlideData, SlideData, TitleSlideData } from './types/slide.js'

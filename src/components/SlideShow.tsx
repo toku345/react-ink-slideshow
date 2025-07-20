@@ -1,27 +1,10 @@
 import { Box, Text, useApp } from 'ink'
 import React from 'react'
 import { useKeyboardNavigation } from '../hooks/useKeyboardNavigation.js'
+import type { SlideData } from '../types/slide.js'
+import { ProgressBar } from './ProgressBar.js'
 import { Slide } from './Slide.js'
 import { TitleSlide } from './TitleSlide.js'
-
-interface BaseSlide {
-  type?: 'title' | 'content'
-}
-
-interface TitleSlideData extends BaseSlide {
-  type: 'title'
-  title: string
-  subtitle?: string
-  author?: string
-}
-
-interface ContentSlideData extends BaseSlide {
-  type?: 'content'
-  title?: string
-  content: string
-}
-
-type SlideData = TitleSlideData | ContentSlideData
 
 interface SlideShowProps {
   slides: SlideData[]
@@ -40,7 +23,6 @@ export const SlideShow: React.FC<SlideShowProps> = ({ slides }) => {
   }
 
   const currentSlideData = slides[currentSlide]
-  const progress = ((currentSlide + 1) / slides.length) * 100
 
   const renderSlide = () => {
     if (currentSlideData.type === 'title') {
@@ -72,10 +54,7 @@ export const SlideShow: React.FC<SlideShowProps> = ({ slides }) => {
       >
         {/* プログレスバー */}
         <Box marginBottom={1}>
-          <Text>
-            <Text color="cyan">{'█'.repeat(Math.ceil(progress / 5))}</Text>
-            {'━'.repeat(Math.floor((100 - progress) / 5))}
-          </Text>
+          <ProgressBar currentSlide={currentSlide} totalSlides={slides.length} />
         </Box>
 
         {/* ナビゲーション情報 */}

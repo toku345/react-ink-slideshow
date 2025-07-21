@@ -16,7 +16,8 @@
     "format": "biome format --write src",
     "format:check": "biome format src",
     "typecheck": "tsc --noEmit",
-    "check": "npm run typecheck && npm run test && npm run format:check && npm run lint"
+    "check": "npm run typecheck && npm run test && npm run format:check && npm run lint",
+    "check:dist": "npm run build && git diff --exit-code dist/"
   },
   "repository": {
     "type": "git",

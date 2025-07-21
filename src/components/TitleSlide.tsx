@@ -11,7 +11,7 @@ interface TitleSlideProps {
 
 export const TitleSlide: React.FC<TitleSlideProps> = ({ title, subtitle, author }) => {
   return (
-    <Box flexDirection="column" alignItems="center" justifyContent="center" height={20}>
+    <Box flexDirection="column" alignItems="center" justifyContent="center" width="100%">
       <Gradient name="rainbow">
         <BigText text={title} />
       </Gradient>

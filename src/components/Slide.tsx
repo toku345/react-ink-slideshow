@@ -11,7 +11,13 @@ export const Slide: React.FC<SlideProps> = ({ title, content }) => {
   const processedLines = processContent(content)
 
   return (
-    <Box flexDirection="column" padding={1}>
+    <Box
+      flexDirection="column"
+      padding={2}
+      alignItems="center"
+      justifyContent="center"
+      width="100%"
+    >
       {title && (
         <Box marginBottom={1}>
           <Text bold color="yellow" underline>
@@ -19,7 +25,9 @@ export const Slide: React.FC<SlideProps> = ({ title, content }) => {
           </Text>
         </Box>
       )}
-      <Box flexDirection="column">{processedLines}</Box>
+      <Box flexDirection="column" alignItems="center">
+        {processedLines}
+      </Box>
     </Box>
   )
 }

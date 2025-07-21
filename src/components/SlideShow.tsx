@@ -35,7 +35,13 @@ export const SlideShow: React.FC<SlideShowProps> = ({ slides }) => {
         />
       )
     }
-    return <Slide title={currentSlideData.title} content={currentSlideData.content} />
+    return (
+      <Slide
+        title={currentSlideData.title}
+        content={currentSlideData.content}
+        fontSize={currentSlideData.fontSize}
+      />
+    )
   }
 
   const terminalHeight = stdout.rows || 30

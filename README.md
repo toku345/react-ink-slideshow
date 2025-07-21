@@ -13,7 +13,6 @@
 ## クイックスタート
 
 ```bash
-# GitHubから直接実行（認証・ビルド不要！）
 npx github:toku345/react-ink-slideshow
 ```
 

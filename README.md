@@ -10,17 +10,19 @@
 - 🎨 コードブロックのシンタックスハイライト
 - 📊 プログレスバー表示
 
-## インストール
+## クイックスタート
 
 ```bash
-npm install react-ink-slideshow
+# GitHubから直接実行（認証・ビルド不要！）
+npx github:toku345/react-ink-slideshow
 ```
 
-## 使い方
+## 開発
 
-### CLIとして実行
+### 開発環境での実行
 
 ```bash
+npm install
 npm run dev
 ```
 
@@ -82,8 +84,22 @@ npm run build
 ### 品質チェック
 
 ```bash
-npm run check  # TypeScript、テスト、フォーマット、リントを実行
+npm run check      # TypeScript、テスト、フォーマット、リントを実行
+npm run check:dist # distフォルダが最新かチェック
 ```
+
+### 開発者向け注意事項
+
+このプロジェクトでは、distフォルダをGitにコミットしています。
+TypeScriptファイルを変更した場合は、必ず以下を実行してください：
+
+```bash
+npm run build     # ビルド実行
+git add dist/     # distフォルダをステージング
+```
+
+pre-commitフックが設定されているため、TypeScriptファイルを変更した際に
+distフォルダが更新されていない場合は、コミットが拒否されます。
 
 ## 技術スタック
 

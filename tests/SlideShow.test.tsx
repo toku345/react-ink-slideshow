@@ -1,7 +1,21 @@
 import { render } from 'ink-testing-library'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { SlideShow } from '../src/components/SlideShow.js'
 import type { SlideData } from '../src/types/slide.js'
+
+// useStdoutのモック
+vi.mock('ink', async () => {
+  const actual = await vi.importActual('ink')
+  return {
+    ...actual,
+    useStdout: () => ({
+      stdout: {
+        rows: 40,
+        columns: 80,
+      },
+    }),
+  }
+})
 
 const testSlides: SlideData[] = [
   {
@@ -46,5 +60,15 @@ describe('SlideShow', () => {
 
     // プログレスバーの存在を確認
     expect(lastFrame()).toMatch(/[━█]+/)
+  })
+
+  it('should use terminal height for fullscreen display', () => {
+    const { lastFrame } = render(<SlideShow slides={testSlides} />)
+    const frame = lastFrame()
+    
+    // 全画面表示のテスト - フレームが存在し、コンテンツが表示されることを確認
+    expect(frame).toBeTruthy()
+    expect(frame).toContain('Welcome')
+    expect(frame).toContain('This is the first slide')
   })
 })

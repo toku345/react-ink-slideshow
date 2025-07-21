@@ -1,4 +1,5 @@
 import { Text } from 'ink'
+import BigText from 'ink-big-text'
 import React from 'react'
 
 export interface ProcessedLine {
@@ -6,7 +7,10 @@ export interface ProcessedLine {
   element: React.JSX.Element
 }
 
-export function processContent(content: string): React.JSX.Element[] {
+export function processContent(
+  content: string,
+  fontSize: 'normal' | 'large' = 'normal',
+): React.JSX.Element[] {
   const lines = content.split('\n')
   let inCodeBlock = false
   const processedLines: React.JSX.Element[] = []
@@ -30,13 +34,23 @@ export function processContent(content: string): React.JSX.Element[] {
         </Text>,
       )
     } else if (line.startsWith('#')) {
-      processedLines.push(
-        <Text key={lineKey} bold color="cyan">
-          {line}
-        </Text>,
-      )
+      if (fontSize === 'large' && line.trim()) {
+        processedLines.push(
+          <BigText key={lineKey} text={line.replace(/^#+\s*/, '')} font="simple" />,
+        )
+      } else {
+        processedLines.push(
+          <Text key={lineKey} bold color="cyan">
+            {line}
+          </Text>,
+        )
+      }
     } else {
-      processedLines.push(<Text key={lineKey}>{line}</Text>)
+      if (fontSize === 'large' && line.trim()) {
+        processedLines.push(<BigText key={lineKey} text={line} font="simple" />)
+      } else {
+        processedLines.push(<Text key={lineKey}>{line}</Text>)
+      }
     }
   })
 

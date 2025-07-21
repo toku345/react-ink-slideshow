@@ -1,4 +1,4 @@
-import { Box, Text, useApp } from 'ink'
+import { Box, Text, useApp, useStdout } from 'ink'
 import React from 'react'
 import { useKeyboardNavigation } from '../hooks/useKeyboardNavigation.js'
 import type { SlideData } from '../types/slide.js'
@@ -12,6 +12,7 @@ interface SlideShowProps {
 
 export const SlideShow: React.FC<SlideShowProps> = ({ slides }) => {
   const { exit } = useApp()
+  const { stdout } = useStdout()
   const { currentSlide } = useKeyboardNavigation(slides.length, exit)
 
   if (slides.length === 0) {
@@ -37,10 +38,22 @@ export const SlideShow: React.FC<SlideShowProps> = ({ slides }) => {
     return <Slide title={currentSlideData.title} content={currentSlideData.content} />
   }
 
+  const terminalHeight = stdout.rows || 30
+  const terminalWidth = stdout.columns || 80
+  const footerHeight = 6
+
   return (
-    <Box flexDirection="column" height={30}>
+    <Box flexDirection="column" height={terminalHeight} width={terminalWidth}>
       {/* スライド本体 */}
-      <Box flexGrow={1}>{renderSlide()}</Box>
+      <Box
+        flexGrow={1}
+        height={terminalHeight - footerHeight}
+        width={terminalWidth}
+        justifyContent="center"
+        alignItems="center"
+      >
+        {renderSlide()}
+      </Box>
 
       {/* フッター */}
       <Box

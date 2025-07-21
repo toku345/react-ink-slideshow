@@ -12,9 +12,18 @@
 
 ## クイックスタート
 
+### npx で実行
+
 ```bash
 # GitHubから直接実行（認証・ビルド不要！）
 npx github:toku345/react-ink-slideshow
+```
+
+### bunx で実行
+
+```bash
+# Bunを使った高速実行
+bunx github:toku345/react-ink-slideshow
 ```
 
 ## 開発

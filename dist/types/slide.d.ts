@@ -11,6 +11,7 @@ export interface ContentSlideData extends BaseSlide {
     type?: 'content';
     title?: string;
     content: string;
+    fontSize?: 'normal' | 'large';
 }
 export type SlideData = TitleSlideData | ContentSlideData;
 //# sourceMappingURL=slide.d.ts.map

@@ -16,7 +16,7 @@ export const SlideShow = ({ slides }) => {
         if (currentSlideData.type === 'title') {
             return (_jsx(TitleSlide, { title: currentSlideData.title, subtitle: currentSlideData.subtitle, author: currentSlideData.author }));
         }
-        return _jsx(Slide, { title: currentSlideData.title, content: currentSlideData.content });
+        return (_jsx(Slide, { title: currentSlideData.title, content: currentSlideData.content, fontSize: currentSlideData.fontSize }));
     };
     const terminalHeight = stdout.rows || 30;
     const terminalWidth = stdout.columns || 80;

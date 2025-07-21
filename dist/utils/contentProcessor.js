@@ -1,6 +1,7 @@
 import { jsxs as _jsxs, jsx as _jsx } from "react/jsx-runtime";
 import { Text } from 'ink';
-export function processContent(content) {
+import BigText from 'ink-big-text';
+export function processContent(content, fontSize = 'normal') {
     const lines = content.split('\n');
     let inCodeBlock = false;
     const processedLines = [];
@@ -17,10 +18,20 @@ export function processContent(content) {
             processedLines.push(_jsxs(Text, { color: "green", children: ['  ', line] }, lineKey));
         }
         else if (line.startsWith('#')) {
-            processedLines.push(_jsx(Text, { bold: true, color: "cyan", children: line }, lineKey));
+            if (fontSize === 'large' && line.trim()) {
+                processedLines.push(_jsx(BigText, { text: line.replace(/^#+\s*/, ''), font: "simple" }, lineKey));
+            }
+            else {
+                processedLines.push(_jsx(Text, { bold: true, color: "cyan", children: line }, lineKey));
+            }
         }
         else {
-            processedLines.push(_jsx(Text, { children: line }, lineKey));
+            if (fontSize === 'large' && line.trim()) {
+                processedLines.push(_jsx(BigText, { text: line, font: "simple" }, lineKey));
+            }
+            else {
+                processedLines.push(_jsx(Text, { children: line }, lineKey));
+            }
         }
     });
     return processedLines;

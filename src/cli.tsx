@@ -1,13 +1,14 @@
 #!/usr/bin/env node
 import { Box, render } from 'ink'
-import { SlideShow, sampleSlides } from './index.js'
+import { SlideShow } from './index.js'
+import { reactInkSlides } from './slides.js'
 
 // Raw modeがサポートされているかチェック
 if (process.stdin.isTTY) {
   // アプリケーションのレンダリング（全画面対応）
   render(
     <Box flexGrow={1}>
-      <SlideShow slides={sampleSlides} />
+      <SlideShow slides={reactInkSlides} />
     </Box>,
   )
 } else {

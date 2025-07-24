@@ -46,8 +46,16 @@ export function processContent(
         )
       }
     } else {
-      if (fontSize === 'large' && line.trim()) {
-        processedLines.push(<BigText key={lineKey} text={line} font="simple" />)
+      if (fontSize === 'large') {
+        if (line.trim()) {
+          // 空でない行はBigTextで表示
+          processedLines.push(<BigText key={lineKey} text={line} font="simple" />)
+        } else {
+          // 空行の場合は適切なスペーシングを確保
+          processedLines.push(
+            <Text key={lineKey}>{/* BigTextの高さに合わせたスペーシング */} </Text>,
+          )
+        }
       } else {
         processedLines.push(<Text key={lineKey}>{line}</Text>)
       }

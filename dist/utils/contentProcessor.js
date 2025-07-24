@@ -26,8 +26,15 @@ export function processContent(content, fontSize = 'normal') {
             }
         }
         else {
-            if (fontSize === 'large' && line.trim()) {
-                processedLines.push(_jsx(BigText, { text: line, font: "simple" }, lineKey));
+            if (fontSize === 'large') {
+                if (line.trim()) {
+                    // 空でない行はBigTextで表示
+                    processedLines.push(_jsx(BigText, { text: line, font: "simple" }, lineKey));
+                }
+                else {
+                    // 空行の場合は適切なスペーシングを確保
+                    processedLines.push(_jsx(Text, { children: " " }, lineKey));
+                }
             }
             else {
                 processedLines.push(_jsx(Text, { children: line }, lineKey));

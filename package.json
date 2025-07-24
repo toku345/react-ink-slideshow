@@ -9,6 +9,7 @@
   },
   "scripts": {
     "dev": "tsx src/cli.tsx",
+    "demo": "tsx src/demo.tsx",
     "build": "tsc",
     "test": "vitest run",
     "test:watch": "vitest",

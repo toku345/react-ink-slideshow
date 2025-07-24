@@ -30,14 +30,14 @@ function printSlide(slide: SlideData, index: number, total: number): void {
       // コンテンツの処理（コードブロックのインデントを保持）
       const lines = slide.content.split('\n')
       let inCodeBlock = false
-      
+
       lines.forEach((line) => {
         if (line.startsWith('```')) {
           inCodeBlock = !inCodeBlock
           console.log(inCodeBlock ? 'コード:' : '---')
           return
         }
-        
+
         if (inCodeBlock) {
           console.log('  ' + line)
         } else if (line.startsWith('#')) {
@@ -57,12 +57,12 @@ function main(): void {
   console.log('React Ink Slideshow - デモモード (非対話型)')
   console.log('このモードはTTYサポートがない環境向けです。')
   console.log(`合計 ${sampleSlides.length} 枚のスライドがあります。`)
-  
+
   // 各スライドを順番に出力
   sampleSlides.forEach((slide, index) => {
     printSlide(slide, index, sampleSlides.length)
   })
-  
+
   console.log('\n' + '='.repeat(60))
   console.log('デモモード終了')
   console.log('インタラクティブなプレゼンテーションには、TTY対応のターミナルで実行してください。')

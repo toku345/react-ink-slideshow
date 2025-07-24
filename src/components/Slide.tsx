@@ -3,9 +3,15 @@ import BigText from 'ink-big-text'
 import React from 'react'
 import { processContent } from '../utils/contentProcessor.js'
 
+/**
+ * スライドコンポーネントのプロパティ
+ */
 interface SlideProps {
+  /** スライドのタイトル */
   title?: string
+  /** スライドの本文コンテンツ */
   content: string
+  /** フォントサイズオプション ('normal' | 'large') */
   fontSize?: 'normal' | 'large'
 }
 

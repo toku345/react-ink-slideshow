@@ -9,7 +9,7 @@
   },
   "scripts": {
     "dev": "tsx src/cli.tsx",
-    "build": "tsc",
+    "build": "tsc && cp slides.yaml dist/",
     "test": "vitest run",
     "test:watch": "vitest",
     "lint": "biome check --enforce-assist=true src",

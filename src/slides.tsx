@@ -1,121 +1,111 @@
+import { readFileSync } from 'node:fs'
+import { join, dirname } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import type { SlideData } from './types/slide.js'
+import { validateSlideData } from './utils/slideValidator.js'
 
-export const reactInkSlides: SlideData[] = [
-  {
-    type: 'title',
-    title: 'React Inkで作る',
-    subtitle: 'モダンなCLIアプリケーション',
-    author: 'toku345',
-  },
-  {
-    title: '今日お話しすること',
-    content: `• **React Ink**って何？
-• 従来のCLI開発との違い
-• 実際の活用事例（claude code等）
-• シンプルなコード例
-• なぜReact Inkが選ばれるのか？`,
-  },
-  {
-    title: 'React Inkとは？',
-    content: `### Reactコンポーネントでターミナルアプリを作るライブラリ
+const __dirname = dirname(fileURLToPath(import.meta.url))
 
-• **JSX**でCLIのUIを記述
-• **宣言的**なアプローチ
-• リッチなターミナル体験を提供
-• Node.js製、npmで簡単インストール
+function loadSlidesFromYAML(): SlideData[] {
+  try {
+    // Try to load from the project root first (for development)
+    const rootPath = join(__dirname, '..', 'slides.yaml')
+    const distPath = join(__dirname, 'slides.yaml')
+    
+    let yamlContent: string
+    try {
+      yamlContent = readFileSync(rootPath, 'utf-8')
+    } catch {
+      // Fallback to dist directory (for production)
+      yamlContent = readFileSync(distPath, 'utf-8')
+    }
+    
+    // Simple YAML parser for our specific format
+    const slides: unknown[] = []
+    const lines = yamlContent.split('\n')
+    let currentSlide: Record<string, unknown> | null = null
+    let currentField: string | null = null
+    let multilineContent: string[] = []
+    let inMultiline = false
+    
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i]
+      const trimmedLine = line.trim()
+      
+      // Skip empty lines and document separator
+      if (!trimmedLine || trimmedLine === '---') continue
+      
+      // New slide starts with '-'
+      if (line.startsWith('- ')) {
+        // Save previous slide if exists
+        if (currentSlide) {
+          if (inMultiline && currentField) {
+            currentSlide[currentField] = multilineContent.join('\n').trim()
+          }
+          slides.push(currentSlide)
+        }
+        
+        // Start new slide
+        currentSlide = {}
+        inMultiline = false
+        multilineContent = []
+        
+        // Check if the line has inline field
+        const inlineMatch = line.match(/^- (\w+):\s*(.+)$/)
+        if (inlineMatch) {
+          currentSlide[inlineMatch[1]] = inlineMatch[2]
+        }
+      } else if (currentSlide) {
+        // Field definition
+        const fieldMatch = line.match(/^\s*(\w+):\s*(.*)$/)
+        if (fieldMatch) {
+          const [, fieldName, fieldValue] = fieldMatch
+          
+          // Save previous multiline content if any
+          if (inMultiline && currentField) {
+            currentSlide[currentField] = multilineContent.join('\n').trim()
+            multilineContent = []
+          }
+          
+          if (fieldValue === '|' || fieldValue === '>') {
+            // Start multiline content
+            inMultiline = true
+            currentField = fieldName
+            multilineContent = []
+          } else if (fieldValue) {
+            // Inline value
+            currentSlide[fieldName] = fieldValue
+            inMultiline = false
+            currentField = null
+          } else {
+            // Empty value
+            currentSlide[fieldName] = ''
+            inMultiline = false
+            currentField = null
+          }
+        } else if (inMultiline) {
+          // Multiline content
+          multilineContent.push(line.substring(4)) // Remove indentation
+        }
+      }
+    }
+    
+    // Save last slide
+    if (currentSlide) {
+      if (inMultiline && currentField) {
+        currentSlide[currentField] = multilineContent.join('\n').trim()
+      }
+      slides.push(currentSlide)
+    }
+    
+    // Validate and return
+    return validateSlideData(slides)
+  } catch (error) {
+    if (error instanceof Error && error.message.includes('ENOENT')) {
+      throw new Error('slides.yaml file not found. Please ensure slides.yaml exists in the project root or dist directory.')
+    }
+    throw error
+  }
+}
 
-\`\`\`bash
-npm install react ink
-\`\`\``,
-  },
-  {
-    title: '従来のCLI vs React Ink',
-    content: `| 従来のCLI開発          | React Ink              |
-|---------------------|----------------------|
-| console.log()の連続    | JSXコンポーネント        |
-| 状態管理が複雑          | Reactの状態管理         |
-| UI更新が困難           | 宣言的な再レンダリング     |
-| 再利用性が低い          | コンポーネント化         |
-
-
-**→ Web開発の知識がそのまま活かせる！**`,
-  },
-  {
-    title: '実際の活用事例',
-    content: `### 有名CLIツールでの採用実績
-
-• **claude code** - Anthropic社のCLIツール
-• **gemini cli** - Google社のAI CLIツール
-• **codex cli** - OpenAI関連ツール
-• **Gatsby CLI** - 静的サイトジェネレータ
-• **Shopify CLI** - EC開発ツール
-
-**→ 大手企業が本格採用している実績あり**`,
-  },
-  {
-    title: 'シンプルなコード例',
-    content: `\`\`\`jsx
-import React, { useState, useEffect } from 'react';
-import { render, Text, Box } from 'ink';
-
-const App = () => {
-  const [counter, setCounter] = useState(0);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCounter(prev => prev + 1);
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, []);
-
-  return (
-    <Box>
-      <Text>カウンター: {counter}</Text>
-    </Box>
-  );
-};
-
-render(<App />);
-\`\`\`
-
-**たったこれだけでリアルタイム更新するCLIが完成！**`,
-  },
-  {
-    title: 'React Inkの利点',
-    content: `### 🎯 **開発効率**
-• Reactの知識を流用可能
-• コンポーネント再利用でDRY原則
-
-### 🎨 **リッチなUI**
-• カラー、スタイリング、レイアウト
-• プログレスバー、スピナーなど
-
-### 🔧 **保守性**
-• 宣言的な記述で可読性向上
-• テストが書きやすい
-
-### 📦 **エコシステム**
-• 豊富なコンポーネントライブラリ
-• 活発なコミュニティ`,
-  },
-  {
-    title: 'まとめ',
-    content: `### React Inkを選ぶべき理由
-
-✅ **学習コストが低い**（React知識を活用）
-✅ **開発速度が速い**（宣言的UI）
-✅ **ユーザー体験が良い**（リッチなインターフェース）
-✅ **実績がある**（大手企業での採用）
-
-### 次のCLIツール開発では React Ink を検討してみませんか？`,
-  },
-  {
-    title: '質疑応答',
-    content: `### ご質問をお聞かせください！
-
-**参考リンク:**
-• 公式ドキュメント: github.com/vadimdemedes/ink
-• サンプル集: github.com/vadimdemedes/ink#examples`,
-  },
-]
+export const reactInkSlides: SlideData[] = loadSlidesFromYAML()

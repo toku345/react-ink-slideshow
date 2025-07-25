@@ -12,13 +12,13 @@ export const Slide: React.FC<SlideProps> = ({ title, content }) => {
 
   return (
     <Box flexDirection="column" padding={2} width="100%">
-      {title && (
-        <Box marginBottom={1}>
+      <Box marginTop={2} marginBottom={1} minHeight={1}>
+        {title && (
           <Text bold color="yellow" underline>
             {title}
           </Text>
-        </Box>
-      )}
+        )}
+      </Box>
       <Box flexDirection="column">{processedLines}</Box>
     </Box>
   )

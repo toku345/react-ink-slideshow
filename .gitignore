@@ -4,5 +4,6 @@ coverage/
 *.log
 .env
 .env.local
-.vscode/
+.vscode/*
+!.vscode/settings.json
 .idea/

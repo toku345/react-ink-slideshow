@@ -50,7 +50,6 @@ export const SlideShow: React.FC<SlideShowProps> = ({ slides }) => {
         height={terminalHeight - footerHeight}
         width={terminalWidth}
         justifyContent="center"
-        alignItems="center"
       >
         {renderSlide()}
       </Box>

@@ -6,6 +6,7 @@ import { Box, render } from 'ink'
 import yaml from 'js-yaml'
 import { SlideShow } from './index.js'
 import type { SlideData } from './types/slide.js'
+import { validateSlideData } from './utils/slideValidator.js'
 
 // YAMLファイル読み込み
 // Note: js-yaml v4.x では load() がデフォルトで安全になったため、safeLoad() は削除されました
@@ -23,16 +24,17 @@ try {
   }
 
   const yamlContent = readFileSync(yamlPath, 'utf-8')
-  slidesData = yaml.load(yamlContent) as SlideData[]
+  const loadedData = yaml.load(yamlContent)
 
-  // 基本的なバリデーション
-  if (!Array.isArray(slidesData)) {
-    console.error('Error: slides.yaml must contain an array of slides')
-    process.exit(1)
-  }
-
-  if (slidesData.length === 0) {
-    console.error('Error: slides.yaml must contain at least one slide')
+  // バリデーションを実行（型ガードを使用）
+  try {
+    slidesData = validateSlideData(loadedData)
+  } catch (validationError) {
+    if (validationError instanceof Error) {
+      console.error(`Error in slides.yaml: ${validationError.message}`)
+    } else {
+      console.error('Error in slides.yaml:', validationError)
+    }
     process.exit(1)
   }
 } catch (error) {

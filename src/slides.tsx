@@ -5,7 +5,7 @@ export const reactInkSlides: SlideData[] = [
     type: 'title',
     title: 'React Inkで作る',
     subtitle: 'モダンなCLIアプリケーション',
-    author: '〜 claude code、gemini cliの裏側技術 〜',
+    author: 'toku345',
   },
   {
     title: '今日お話しすること',
@@ -37,6 +37,7 @@ npm install react ink
 | UI更新が困難           | 宣言的な再レンダリング     |
 | 再利用性が低い          | コンポーネント化         |
 
+
 **→ Web開発の知識がそのまま活かせる！**`,
   },
   {
@@ -59,15 +60,15 @@ import { render, Text, Box } from 'ink';
 
 const App = () => {
   const [counter, setCounter] = useState(0);
-  
+
   useEffect(() => {
     const timer = setInterval(() => {
       setCounter(prev => prev + 1);
     }, 1000);
-    
+
     return () => clearInterval(timer);
   }, []);
-  
+
   return (
     <Box>
       <Text>カウンター: {counter}</Text>
@@ -107,8 +108,7 @@ render(<App />);
 ✅ **ユーザー体験が良い**（リッチなインターフェース）
 ✅ **実績がある**（大手企業での採用）
 
-### 次のCLIツール開発では
-### React Inkを検討してみませんか？`,
+### 次のCLIツール開発では React Ink を検討してみませんか？`,
   },
   {
     title: '質疑応答',

@@ -8,6 +8,7 @@ import { SlideShow } from './index.js'
 import type { SlideData } from './types/slide.js'
 
 // YAMLファイル読み込み
+// Note: js-yaml v4.x では load() がデフォルトで安全になったため、safeLoad() は削除されました
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 const slidesData = yaml.load(readFileSync(join(__dirname, 'slides.yaml'), 'utf-8')) as SlideData[]

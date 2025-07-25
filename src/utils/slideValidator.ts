@@ -8,8 +8,12 @@ export function isTitleSlide(slide: unknown): slide is TitleSlideData {
     return false
   }
 
-  const obj = slide as Record<string, unknown>
-  return obj.type === 'title' && typeof obj.title === 'string'
+  return (
+    'type' in slide &&
+    slide.type === 'title' &&
+    'title' in slide &&
+    typeof slide.title === 'string'
+  )
 }
 
 /**
@@ -20,9 +24,12 @@ export function isContentSlide(slide: unknown): slide is ContentSlideData {
     return false
   }
 
-  const obj = slide as Record<string, unknown>
   // typeが未定義またはcontentの場合はコンテンツスライド
-  return (obj.type === undefined || obj.type === 'content') && typeof obj.content === 'string'
+  return (
+    'content' in slide &&
+    typeof slide.content === 'string' &&
+    (!('type' in slide) || slide.type === undefined || slide.type === 'content')
+  )
 }
 
 /**
@@ -63,9 +70,7 @@ export function validateSlideData(data: unknown): SlideData[] {
     } else {
       // 不正なスライドタイプ
       const slideType =
-        typeof slide === 'object' && slide !== null && 'type' in slide
-          ? (slide as Record<string, unknown>).type
-          : 'unknown'
+        typeof slide === 'object' && slide !== null && 'type' in slide ? slide.type : 'unknown'
       throw new Error(
         `Slide ${i + 1}: Invalid slide structure. Got type: ${slideType}. Expected 'title' or 'content' (or undefined for content)`,
       )

@@ -3,12 +3,12 @@ import { existsSync, readFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { Box, render } from 'ink'
-import yaml from 'js-yaml'
 import { SlideShow } from './index.js'
 import type { SlideData } from './types/slide.js'
+import { validateSlideData } from './utils/slideValidator.js'
+import { parseYaml } from './utils/yamlParser.js'
 
 // YAMLファイル読み込み
-// Note: js-yaml v4.x では load() がデフォルトで安全になったため、safeLoad() は削除されました
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
@@ -23,18 +23,12 @@ try {
   }
 
   const yamlContent = readFileSync(yamlPath, 'utf-8')
-  slidesData = yaml.load(yamlContent) as SlideData[]
-
-  // 基本的なバリデーション
-  if (!Array.isArray(slidesData)) {
-    console.error('Error: slides.yaml must contain an array of slides')
-    process.exit(1)
-  }
-
-  if (slidesData.length === 0) {
-    console.error('Error: slides.yaml must contain at least one slide')
-    process.exit(1)
-  }
+  
+  // カスタムYAMLパーサーでパース
+  const parsedData = parseYaml(yamlContent)
+  
+  // 型ガードと詳細なバリデーション
+  slidesData = validateSlideData(parsedData)
 } catch (error) {
   if (error instanceof Error) {
     console.error('Failed to load slides.yaml:', error.message)

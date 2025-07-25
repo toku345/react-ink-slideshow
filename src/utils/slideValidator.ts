@@ -8,12 +8,25 @@ export function isTitleSlide(slide: unknown): slide is TitleSlideData {
     return false
   }
 
-  return (
-    'type' in slide &&
-    slide.type === 'title' &&
-    'title' in slide &&
-    typeof slide.title === 'string'
-  )
+  // 必須フィールドのチェック
+  if (
+    !('type' in slide) ||
+    slide.type !== 'title' ||
+    !('title' in slide) ||
+    typeof slide.title !== 'string'
+  ) {
+    return false
+  }
+
+  // オプションフィールドのチェック
+  if ('subtitle' in slide && typeof slide.subtitle !== 'string') {
+    return false
+  }
+  if ('author' in slide && typeof slide.author !== 'string') {
+    return false
+  }
+
+  return true
 }
 
 /**
@@ -24,12 +37,22 @@ export function isContentSlide(slide: unknown): slide is ContentSlideData {
     return false
   }
 
-  // typeが未定義またはcontentの場合はコンテンツスライド
-  return (
-    'content' in slide &&
-    typeof slide.content === 'string' &&
-    (!('type' in slide) || slide.type === undefined || slide.type === 'content')
-  )
+  // 必須フィールドのチェック
+  if (!('content' in slide) || typeof slide.content !== 'string') {
+    return false
+  }
+
+  // typeフィールドのチェック（未定義またはcontentのみ許可）
+  if ('type' in slide && slide.type !== undefined && slide.type !== 'content') {
+    return false
+  }
+
+  // オプションフィールドのチェック
+  if ('title' in slide && typeof slide.title !== 'string') {
+    return false
+  }
+
+  return true
 }
 
 /**
@@ -68,12 +91,43 @@ export function validateSlideData(data: unknown): SlideData[] {
       }
       validatedSlides.push(slide)
     } else {
+      // より詳細なエラーメッセージを生成
+      const errors: string[] = []
+
+      if (typeof slide === 'object' && slide !== null) {
+        if ('type' in slide && slide.type === 'title') {
+          if (!('title' in slide)) {
+            errors.push('missing required field "title"')
+          } else if (typeof slide.title !== 'string') {
+            errors.push(`"title" must be string, got ${typeof slide.title}`)
+          }
+          if ('subtitle' in slide && typeof slide.subtitle !== 'string') {
+            errors.push(`"subtitle" must be string, got ${typeof slide.subtitle}`)
+          }
+          if ('author' in slide && typeof slide.author !== 'string') {
+            errors.push(`"author" must be string, got ${typeof slide.author}`)
+          }
+        } else if (!('type' in slide) || slide.type === undefined || slide.type === 'content') {
+          if (!('content' in slide)) {
+            errors.push('missing required field "content"')
+          } else if (typeof slide.content !== 'string') {
+            errors.push(`"content" must be string, got ${typeof slide.content}`)
+          }
+          if ('title' in slide && typeof slide.title !== 'string') {
+            errors.push(`"title" must be string, got ${typeof slide.title}`)
+          }
+        }
+      }
       // 不正なスライドタイプ
       const slideType =
         typeof slide === 'object' && slide !== null && 'type' in slide ? slide.type : 'unknown'
-      throw new Error(
-        `Slide ${i + 1}: Invalid slide structure. Got type: ${slideType}. Expected 'title' or 'content' (or undefined for content)`,
-      )
+
+      const errorMessage =
+        errors.length > 0
+          ? `Slide ${i + 1}: Invalid slide structure. Got type: ${slideType}. Errors: ${errors.join(', ')}`
+          : `Slide ${i + 1}: Invalid slide structure. Got type: ${slideType}. Expected 'title' or 'content' (or undefined for content)`
+
+      throw new Error(errorMessage)
     }
   }
 

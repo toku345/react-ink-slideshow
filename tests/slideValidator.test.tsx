@@ -43,6 +43,12 @@ describe('slideValidator', () => {
       expect(isTitleSlide({ type: 'title' })).toBe(false) // missing title
       expect(isTitleSlide({ type: 'content', title: 'Test' })).toBe(false)
     })
+
+    it('should return false for invalid optional field types', () => {
+      expect(isTitleSlide({ type: 'title', title: 'Test', subtitle: 123 })).toBe(false)
+      expect(isTitleSlide({ type: 'title', title: 'Test', author: null })).toBe(false)
+      expect(isTitleSlide({ type: 'title', title: 'Test', subtitle: {}, author: [] })).toBe(false)
+    })
   })
 
   describe('isContentSlide', () => {
@@ -86,6 +92,12 @@ describe('slideValidator', () => {
       expect(isContentSlide({})).toBe(false)
       expect(isContentSlide({ content: 123 })).toBe(false) // content not string
       expect(isContentSlide({ type: 'content' })).toBe(false) // missing content
+    })
+
+    it('should return false for invalid optional field types', () => {
+      expect(isContentSlide({ content: 'Test', title: 123 })).toBe(false)
+      expect(isContentSlide({ content: 'Test', title: null })).toBe(false)
+      expect(isContentSlide({ content: 'Test', title: {} })).toBe(false)
     })
   })
 
@@ -193,7 +205,7 @@ describe('slideValidator', () => {
         { randomField: 'value' },
       ]
       expect(() => validateSlideData(slideWithoutRequiredFields)).toThrow(
-        'Slide 1: Invalid slide structure. Got type: unknown. Expected \'title\' or \'content\' (or undefined for content)',
+        'Slide 1: Invalid slide structure. Got type: unknown. Errors: missing required field "content"',
       )
     })
 
@@ -205,6 +217,34 @@ describe('slideValidator', () => {
       ]
       expect(() => validateSlideData(mixedSlides)).toThrow(
         'Slide 2: Invalid slide structure',
+      )
+    })
+
+    it('should provide detailed error messages for invalid field types', () => {
+      const invalidFieldTypes = [
+        { type: 'title', title: 123 },
+      ]
+      expect(() => validateSlideData(invalidFieldTypes)).toThrow(
+        'Slide 1: Invalid slide structure. Got type: title. Errors: "title" must be string, got number',
+      )
+    })
+
+    it('should report multiple validation errors', () => {
+      const multipleErrors = [
+        { type: 'title', title: 'Valid' },
+        { content: 'Test', title: 123 }, // invalid title type
+      ]
+      expect(() => validateSlideData(multipleErrors)).toThrow(
+        'Slide 2: Invalid slide structure. Got type: unknown. Errors: "title" must be string, got number',
+      )
+    })
+
+    it('should validate optional fields in content slide', () => {
+      const invalidOptional = [
+        { type: 'title', title: 'Test', subtitle: null, author: 123 },
+      ]
+      expect(() => validateSlideData(invalidOptional)).toThrow(
+        'Slide 1: Invalid slide structure. Got type: title. Errors: "subtitle" must be string, got object, "author" must be string, got number',
       )
     })
   })

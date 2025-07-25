@@ -28,6 +28,15 @@ Press arrow keys to navigate!`,
 📊 Progress bar`,
   },
   {
+    title: 'Large Font Demo',
+    content: `# This is BIG!
+
+Perfect for LT presentations!
+
+Easy to read from far away.`,
+    fontSize: 'large',
+  },
+  {
     title: 'Code Example',
     content: `Here's how to create a slide:
 

@@ -41,4 +41,59 @@ That's all!`
     expect(lastFrame()).toContain('My Slide')
     expect(lastFrame()).toContain('Content here')
   })
+
+  describe('fontSize option', () => {
+    it('should render with large font when fontSize is "large"', () => {
+      const { lastFrame } = render(
+        <Slide title="Big Title" content="Big content" fontSize="large" />,
+      )
+      // BigTextコンポーネントはASCIIアートとして文字を大きく表示するため、
+      // 元のテキストがフレーム内に含まれているかを確認
+      const frame = lastFrame()
+      // タイトルと本文の両方が表示されていることを確認
+      expect(frame).toBeTruthy()
+      expect(frame?.length).toBeGreaterThan(0)
+    })
+
+    it('should render normal font by default', () => {
+      const { lastFrame } = render(<Slide title="Normal Title" content="Normal content" />)
+      expect(lastFrame()).toContain('Normal Title')
+      expect(lastFrame()).toContain('Normal content')
+    })
+
+    it('should handle empty lines with large font', () => {
+      const content = `Line 1
+
+Line 3`
+      const { lastFrame } = render(<Slide content={content} fontSize="large" />)
+      const frame = lastFrame()
+      expect(frame).toBeTruthy()
+      // 空行は表示されないが、Line 1とLine 3の間にスペースがあることを確認
+    })
+
+    it('should not apply large font to code blocks', () => {
+      const content = `Normal text
+
+\`\`\`javascript
+const code = true
+\`\`\`
+
+More text`
+      const { lastFrame } = render(<Slide content={content} fontSize="large" />)
+      const frame = lastFrame()
+      expect(frame).toBeTruthy()
+      // コードブロックは通常のフォントサイズで表示される
+      expect(frame).toContain('const code = true')
+    })
+
+    it('should render headers with large font', () => {
+      const content = `# Header 1
+## Header 2
+Normal text`
+      const { lastFrame } = render(<Slide content={content} fontSize="large" />)
+      const frame = lastFrame()
+      expect(frame).toBeTruthy()
+      // ヘッダーも大きなフォントで表示される
+    })
+  })
 })

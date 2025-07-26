@@ -10,14 +10,14 @@ function isValidObject(value: unknown): value is Record<string, unknown> {
 /**
  * フィールドの型チェック
  */
-function hasStringField(obj: Record<string, unknown>, field: string): boolean {
+function isStringField(obj: Record<string, unknown>, field: string): boolean {
   return field in obj && typeof obj[field] === 'string'
 }
 
 /**
  * オプションフィールドのバリデーション
  */
-function validateOptionalStringField(obj: Record<string, unknown>, field: string): boolean {
+function isOptionalStringField(obj: Record<string, unknown>, field: string): boolean {
   return !(field in obj) || typeof obj[field] === 'string'
 }
 
@@ -30,13 +30,13 @@ export function isTitleSlide(slide: unknown): slide is TitleSlideData {
   }
 
   // 必須フィールドのチェック
-  if (!('type' in slide) || slide.type !== 'title' || !hasStringField(slide, 'title')) {
+  if (!('type' in slide) || slide.type !== 'title' || !isStringField(slide, 'title')) {
     return false
   }
 
   // オプションフィールドのチェック
   return (
-    validateOptionalStringField(slide, 'subtitle') && validateOptionalStringField(slide, 'author')
+    isOptionalStringField(slide, 'subtitle') && isOptionalStringField(slide, 'author')
   )
 }
 
@@ -49,7 +49,7 @@ export function isContentSlide(slide: unknown): slide is ContentSlideData {
   }
 
   // 必須フィールドのチェック
-  if (!hasStringField(slide, 'content')) {
+  if (!isStringField(slide, 'content')) {
     return false
   }
 
@@ -59,7 +59,7 @@ export function isContentSlide(slide: unknown): slide is ContentSlideData {
   }
 
   // オプションフィールドのチェック
-  return validateOptionalStringField(slide, 'title')
+  return isOptionalStringField(slide, 'title')
 }
 
 /**

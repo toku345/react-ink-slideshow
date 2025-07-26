@@ -45,20 +45,45 @@ That's all!`
   it('should maintain consistent layout height with and without title', () => {
     const { lastFrame: withTitle } = render(<Slide title="Title" content="Content" />)
     const { lastFrame: withoutTitle } = render(<Slide content="Content" />)
-    
+
     // タイトルありとなしでコンテンツの位置が一貫していることを確認
     // 両方のフレームでコンテンツが表示されていることを確認
     expect(withTitle()).toContain('Title')
     expect(withTitle()).toContain('Content')
     expect(withoutTitle()).toContain('Content')
-    
+
     // レイアウトの一貫性を視覚的に確認するため、
     // 両方のケースでコンテンツが適切に表示されていることを検証
-    const withTitleLines = withTitle().split('\n')
-    const withoutTitleLines = withoutTitle().split('\n')
-    
-    // タイトルなしの場合でも、minHeight={1}により
-    // タイトル領域分のスペースが確保されていることを確認
+    const withTitleLines = withTitle()?.split('\n') || []
+    const withoutTitleLines = withoutTitle()?.split('\n') || []
+
+    // 両方のケースで適切な行数があることを確認
+    expect(withTitleLines.length).toBeGreaterThan(0)
     expect(withoutTitleLines.length).toBeGreaterThan(0)
+  })
+
+  it('should render content with proper line breaks', () => {
+    const content = `Line 1
+
+Line 3 (with empty line above)
+Line 4`
+    const { lastFrame } = render(<Slide content={content} />)
+    const output = lastFrame()
+
+    // 改行が正しく表示されていることを確認
+    expect(output).toContain('Line 1')
+    expect(output).toContain('Line 3 (with empty line above)')
+    expect(output).toContain('Line 4')
+
+    // 各行が別々の行として表示されていることを確認
+    const lines = output?.split('\n') || []
+    const line1Index = lines.findIndex(line => line.includes('Line 1'))
+    const line3Index = lines.findIndex(line => line.includes('Line 3'))
+    const line4Index = lines.findIndex(line => line.includes('Line 4'))
+
+    // Line 1とLine 3の間に空行があることを確認
+    expect(line3Index - line1Index).toBeGreaterThan(1)
+    // Line 3とLine 4は連続していることを確認
+    expect(line4Index - line3Index).toBe(1)
   })
 })

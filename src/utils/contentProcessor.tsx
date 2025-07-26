@@ -6,6 +6,7 @@ export function processContent(content: string): React.JSX.Element {
   let inCodeBlock = false
   let codeBlockStartIndex = -1
   const elements: React.ReactNode[] = []
+  let elementIndex = 0
 
   lines.forEach((line, index) => {
     if (line.startsWith('```')) {
@@ -18,24 +19,24 @@ export function processContent(content: string): React.JSX.Element {
 
     // 最初の行以外は改行を追加
     if (elements.length > 0) {
-      elements.push(<Newline key={`newline-${index}`} />)
+      elements.push(<Newline key={`newline-${elementIndex++}`} />)
     }
 
     if (inCodeBlock) {
       elements.push(
-        <Text key={`line-${index}`} color="green">
+        <Text key={`line-${elementIndex++}`} color="green">
           {'  '}
           {line}
         </Text>,
       )
     } else if (line.startsWith('#')) {
       elements.push(
-        <Text key={`line-${index}`} bold color="cyan">
+        <Text key={`line-${elementIndex++}`} bold color="cyan">
           {line}
         </Text>,
       )
     } else {
-      elements.push(<Text key={`line-${index}`}>{line}</Text>)
+      elements.push(<Text key={`line-${elementIndex++}`}>{line}</Text>)
     }
   })
 

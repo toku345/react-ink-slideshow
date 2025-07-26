@@ -73,4 +73,28 @@ describe('processContent', () => {
     const { lastFrame } = render(processContent(content))
     expect(() => render(processContent(content))).not.toThrow()
   })
+
+  it('未閉じのコードブロックを通常のテキストとして処理する', () => {
+    const content = '```javascript\nconst x = 1;\nconsole.log(x);'
+    const { lastFrame } = render(processContent(content))
+    const output = lastFrame()
+    // 未閉じのコードブロックは通常のテキストとして処理される
+    expect(output).toContain('```javascript')
+    expect(output).toContain('const x = 1;')
+    expect(output).toContain('console.log(x);')
+  })
+
+  it('コンソール警告が出力される（開発環境）', () => {
+    const originalEnv = process.env.NODE_ENV
+    process.env.NODE_ENV = 'development'
+    const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    
+    const content = '```javascript\nconst x = 1;'
+    render(processContent(content))
+    
+    expect(consoleSpy).toHaveBeenCalledWith('Warning: Unclosed code block starting at line 1')
+    
+    consoleSpy.mockRestore()
+    process.env.NODE_ENV = originalEnv
+  })
 })

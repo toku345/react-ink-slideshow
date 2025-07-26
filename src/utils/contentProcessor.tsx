@@ -75,34 +75,24 @@ function parseCodeBlock(
     codeLines.push(lines[i])
   }
 
+  // 未閉じのコードブロックはエラーとして扱う
   if (process.env.NODE_ENV !== 'production') {
     console.warn(`Warning: Unclosed code block starting at line ${startIndex + 1}`)
   }
 
-  return {
-    element: {
-      type: 'codeBlock',
-      language: language || undefined,
-      lines: codeLines,
-    },
-    endIndex: lines.length - 1,
-  }
+  // 未閉じのコードブロックは通常のテキストとして扱う
+  return null
 }
 
 function renderElements(elements: ContentElement[]): React.ReactNode[] {
-  const result: React.ReactNode[] = []
-
-  elements.forEach((element, index) => {
+  return elements.flatMap((element, index) => {
+    const rendered = renderElement(element, index)
     if (index > 0) {
       // biome-ignore lint/suspicious/noArrayIndexKey: スライドコンテンツは静的であり、順序が変更されることはないため
-      result.push(<Newline key={`newline-${index}`} />)
+      return [<Newline key={`newline-${index}`} />, rendered]
     }
-
-    const rendered = renderElement(element, index)
-    result.push(rendered)
+    return [rendered]
   })
-
-  return result
 }
 
 function renderElement(element: ContentElement, index: number): React.ReactNode {

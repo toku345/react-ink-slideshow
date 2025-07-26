@@ -1,35 +1,44 @@
 /**
+ * 基本的なオブジェクトバリデーション
+ */
+function isValidObject(value) {
+    return typeof value === 'object' && value !== null;
+}
+/**
+ * フィールドの型チェック
+ */
+function hasStringField(obj, field) {
+    return field in obj && typeof obj[field] === 'string';
+}
+/**
+ * オプションフィールドのバリデーション
+ */
+function validateOptionalStringField(obj, field) {
+    return !(field in obj) || typeof obj[field] === 'string';
+}
+/**
  * タイトルスライドかどうかを判定する型ガード関数
  */
 export function isTitleSlide(slide) {
-    if (typeof slide !== 'object' || slide === null) {
+    if (!isValidObject(slide)) {
         return false;
     }
     // 必須フィールドのチェック
-    if (!('type' in slide) ||
-        slide.type !== 'title' ||
-        !('title' in slide) ||
-        typeof slide.title !== 'string') {
+    if (!('type' in slide) || slide.type !== 'title' || !hasStringField(slide, 'title')) {
         return false;
     }
     // オプションフィールドのチェック
-    if ('subtitle' in slide && typeof slide.subtitle !== 'string') {
-        return false;
-    }
-    if ('author' in slide && typeof slide.author !== 'string') {
-        return false;
-    }
-    return true;
+    return (validateOptionalStringField(slide, 'subtitle') && validateOptionalStringField(slide, 'author'));
 }
 /**
  * コンテンツスライドかどうかを判定する型ガード関数
  */
 export function isContentSlide(slide) {
-    if (typeof slide !== 'object' || slide === null) {
+    if (!isValidObject(slide)) {
         return false;
     }
     // 必須フィールドのチェック
-    if (!('content' in slide) || typeof slide.content !== 'string') {
+    if (!hasStringField(slide, 'content')) {
         return false;
     }
     // typeフィールドのチェック（未定義またはcontentのみ許可）
@@ -37,10 +46,7 @@ export function isContentSlide(slide) {
         return false;
     }
     // オプションフィールドのチェック
-    if ('title' in slide && typeof slide.title !== 'string') {
-        return false;
-    }
-    return true;
+    return validateOptionalStringField(slide, 'title');
 }
 /**
  * スライドデータのバリデーションを実行

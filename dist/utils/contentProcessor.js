@@ -34,7 +34,7 @@ export function processContent(content) {
         }
     });
     // 未閉じのコードブロックがある場合の警告
-    if (inCodeBlock && process.env.NODE_ENV !== 'production') {
+    if (inCodeBlock && process.env.NODE_ENV !== 'production' && codeBlockStartIndex !== -1) {
         console.warn(`Warning: Unclosed code block starting at line ${codeBlockStartIndex + 1}`);
     }
     return _jsx(Text, { children: elements });

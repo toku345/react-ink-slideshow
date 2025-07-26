@@ -5,6 +5,7 @@ export function processContent(content) {
     let inCodeBlock = false;
     let codeBlockStartIndex = -1;
     const elements = [];
+    let elementIndex = 0;
     lines.forEach((line, index) => {
         if (line.startsWith('```')) {
             if (!inCodeBlock) {
@@ -15,16 +16,16 @@ export function processContent(content) {
         }
         // 最初の行以外は改行を追加
         if (elements.length > 0) {
-            elements.push(_jsx(Newline, {}, `newline-${index}`));
+            elements.push(_jsx(Newline, {}, `newline-${elementIndex++}`));
         }
         if (inCodeBlock) {
-            elements.push(_jsxs(Text, { color: "green", children: ['  ', line] }, `line-${index}`));
+            elements.push(_jsxs(Text, { color: "green", children: ['  ', line] }, `line-${elementIndex++}`));
         }
         else if (line.startsWith('#')) {
-            elements.push(_jsx(Text, { bold: true, color: "cyan", children: line }, `line-${index}`));
+            elements.push(_jsx(Text, { bold: true, color: "cyan", children: line }, `line-${elementIndex++}`));
         }
         else {
-            elements.push(_jsx(Text, { children: line }, `line-${index}`));
+            elements.push(_jsx(Text, { children: line }, `line-${elementIndex++}`));
         }
     });
     // 未閉じのコードブロックがある場合の警告

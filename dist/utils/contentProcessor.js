@@ -47,29 +47,22 @@ function parseCodeBlock(lines, startIndex) {
         }
         codeLines.push(lines[i]);
     }
+    // 未閉じのコードブロックはエラーとして扱う
     if (process.env.NODE_ENV !== 'production') {
         console.warn(`Warning: Unclosed code block starting at line ${startIndex + 1}`);
     }
-    return {
-        element: {
-            type: 'codeBlock',
-            language: language || undefined,
-            lines: codeLines,
-        },
-        endIndex: lines.length - 1,
-    };
+    // 未閉じのコードブロックは通常のテキストとして扱う
+    return null;
 }
 function renderElements(elements) {
-    const result = [];
-    elements.forEach((element, index) => {
+    return elements.flatMap((element, index) => {
+        const rendered = renderElement(element, index);
         if (index > 0) {
             // biome-ignore lint/suspicious/noArrayIndexKey: スライドコンテンツは静的であり、順序が変更されることはないため
-            result.push(_jsx(Newline, {}, `newline-${index}`));
+            return [_jsx(Newline, {}, `newline-${index}`), rendered];
         }
-        const rendered = renderElement(element, index);
-        result.push(rendered);
+        return [rendered];
     });
-    return result;
 }
 function renderElement(element, index) {
     switch (element.type) {

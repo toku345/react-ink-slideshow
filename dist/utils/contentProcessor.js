@@ -5,7 +5,6 @@ export function processContent(content) {
     let inCodeBlock = false;
     let codeBlockStartIndex = -1;
     const elements = [];
-    let elementIndex = 0;
     lines.forEach((line, index) => {
         if (line.startsWith('```')) {
             if (!inCodeBlock) {
@@ -16,16 +15,22 @@ export function processContent(content) {
         }
         // 最初の行以外は改行を追加
         if (elements.length > 0) {
-            elements.push(_jsx(Newline, {}, `newline-${elementIndex++}`));
+            // biome-ignore lint/suspicious/noArrayIndexKey: スライドコンテンツは静的であり、順序が変更されることはないため
+            elements.push(_jsx(Newline, {}, `newline-${index}`));
         }
         if (inCodeBlock) {
-            elements.push(_jsxs(Text, { color: "green", children: ['  ', line] }, `line-${elementIndex++}`));
+            elements.push(
+            // biome-ignore lint/suspicious/noArrayIndexKey: スライドコンテンツは静的であり、順序が変更されることはないため
+            _jsxs(Text, { color: "green", children: ['  ', line] }, `line-${index}`));
         }
         else if (line.startsWith('#')) {
-            elements.push(_jsx(Text, { bold: true, color: "cyan", children: line }, `line-${elementIndex++}`));
+            elements.push(
+            // biome-ignore lint/suspicious/noArrayIndexKey: スライドコンテンツは静的であり、順序が変更されることはないため
+            _jsx(Text, { bold: true, color: "cyan", children: line }, `line-${index}`));
         }
         else {
-            elements.push(_jsx(Text, { children: line }, `line-${elementIndex++}`));
+            // biome-ignore lint/suspicious/noArrayIndexKey: スライドコンテンツは静的であり、順序が変更されることはないため
+            elements.push(_jsx(Text, { children: line }, `line-${index}`));
         }
     });
     // 未閉じのコードブロックがある場合の警告

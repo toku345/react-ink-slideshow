@@ -73,4 +73,62 @@ describe('processContent', () => {
     const { lastFrame } = render(processContent(content))
     expect(() => render(processContent(content))).not.toThrow()
   })
+
+  it('未閉じのコードブロックもコードブロックとして処理する', () => {
+    const content = '```javascript\nconst x = 1;\nconsole.log(x);'
+    const { lastFrame } = render(processContent(content))
+    const output = lastFrame()
+    // 未閉じのコードブロックもシンタックスハイライトされる
+    expect(output).toContain('const')
+    expect(output).toContain('x')
+    expect(output).toContain('1')
+    expect(output).toContain('console')
+    expect(output).toContain('log')
+  })
+
+  it('コンソール警告が出力される（開発環境）', () => {
+    const originalEnv = process.env.NODE_ENV
+    process.env.NODE_ENV = 'development'
+    const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    
+    const content = '```javascript\nconst x = 1;'
+    render(processContent(content))
+    
+    expect(consoleSpy).toHaveBeenCalledWith('Warning: Unclosed code block starting at line 1')
+    
+    consoleSpy.mockRestore()
+    process.env.NODE_ENV = originalEnv
+  })
+
+  it('連続する複数のコードブロックを処理できる', () => {
+    const content = '```js\nconst a = 1;\n```\n```python\nprint("hello")\n```'
+    const { lastFrame } = render(processContent(content))
+    const output = lastFrame()
+    // 両方のコードブロックが処理される
+    expect(output).toContain('const')
+    expect(output).toContain('a')
+    expect(output).toContain('print')
+    expect(output).toContain('hello')
+  })
+
+  it('コードブロック内の特殊文字を正しく処理する', () => {
+    const content = '```js\nconst str = "Hello\\nWorld";\nconst regex = /\\d+/g;\n```'
+    const { lastFrame } = render(processContent(content))
+    const output = lastFrame()
+    expect(output).toContain('const')
+    expect(output).toContain('str')
+    expect(output).toContain('Hello')
+    expect(output).toContain('World')
+    expect(output).toContain('regex')
+  })
+
+  it('コードブロック内にバッククォートを含む場合', () => {
+    const content = '```js\nconst template = `Hello ${name}`;\n```'
+    const { lastFrame } = render(processContent(content))
+    const output = lastFrame()
+    expect(output).toContain('const')
+    expect(output).toContain('template')
+    expect(output).toContain('Hello')
+    expect(output).toContain('name')
+  })
 })

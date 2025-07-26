@@ -68,7 +68,8 @@ jobs:
           #   'Please provide a thorough code review focusing on our coding standards and best practices.' }}
           
           # Optional: Add specific tools for running tests or linting
-          # allowed_tools: "Bash(npm run test),Bash(npm run lint),Bash(npm run typecheck)"
+          # Allow Claude to run npm commands for dependency installation, testing, and linting
+          allowed_tools: "Bash(npm install:*),Bash(npm run:*),Bash(npm test:*),Bash(npm run build),Bash(npm run typecheck),Bash(npm run lint),Bash(npm run format),Bash(npm run check),Bash(npm run dev),Bash(npm run test)"
           
           # Optional: Skip review for certain conditions
           # if: |

@@ -8,7 +8,7 @@ interface SlideProps {
 }
 
 export const Slide: React.FC<SlideProps> = ({ title, content }) => {
-  const processedLines = processContent(content)
+  const processedContent = processContent(content)
 
   return (
     <Box flexDirection="column" padding={2} width="100%">
@@ -20,7 +20,7 @@ export const Slide: React.FC<SlideProps> = ({ title, content }) => {
           </Text>
         )}
       </Box>
-      <Box flexDirection="column">{processedLines}</Box>
+      <Box>{processedContent}</Box>
     </Box>
   )
 }

@@ -1,27 +1,43 @@
-import { jsxs as _jsxs, jsx as _jsx } from "react/jsx-runtime";
-import { Text } from 'ink';
+import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { Newline, Text } from 'ink';
 export function processContent(content) {
     const lines = content.split('\n');
     let inCodeBlock = false;
-    const processedLines = [];
-    let lineNumber = 0;
-    lines.forEach((line) => {
+    let codeBlockStartLine = -1;
+    const elements = [];
+    lines.forEach((line, index) => {
         if (line.startsWith('```')) {
+            if (!inCodeBlock) {
+                codeBlockStartLine = index;
+            }
             inCodeBlock = !inCodeBlock;
             return;
         }
-        // 各行に一意のIDを生成（コンテンツと行番号を組み合わせ）
-        const lineKey = `line-${lineNumber}-${line.slice(0, 10).replace(/\s/g, '_')}`;
-        lineNumber++;
+        // 最初の行以外は改行を追加
+        if (elements.length > 0) {
+            // biome-ignore lint/suspicious/noArrayIndexKey: スライドコンテンツは静的であり、順序が変更されることはないため
+            elements.push(_jsx(Newline, {}, `newline-${index}`));
+        }
         if (inCodeBlock) {
-            processedLines.push(_jsxs(Text, { color: "green", children: ['  ', line] }, lineKey));
+            elements.push(
+            // biome-ignore lint/suspicious/noArrayIndexKey: スライドコンテンツは静的であり、順序が変更されることはないため
+            _jsxs(Text, { color: "green", children: ['  ', line] }, `line-${index}`));
         }
         else if (line.startsWith('#')) {
-            processedLines.push(_jsx(Text, { bold: true, color: "cyan", children: line }, lineKey));
+            elements.push(
+            // biome-ignore lint/suspicious/noArrayIndexKey: スライドコンテンツは静的であり、順序が変更されることはないため
+            _jsx(Text, { bold: true, color: "cyan", children: line }, `line-${index}`));
         }
         else {
-            processedLines.push(_jsx(Text, { children: line }, lineKey));
+            // biome-ignore lint/suspicious/noArrayIndexKey: スライドコンテンツは静的であり、順序が変更されることはないため
+            elements.push(_jsx(Text, { children: line }, `line-${index}`));
         }
     });
-    return processedLines;
+    // 未閉じのコードブロックがある場合の警告
+    // codeBlockStartLine !== -1 のチェックは論理的には不要だが、
+    // 防御的プログラミングの観点から明示的にチェック
+    if (inCodeBlock && process.env.NODE_ENV !== 'production' && codeBlockStartLine !== -1) {
+        console.warn(`Warning: Unclosed code block starting at line ${codeBlockStartLine + 1}`);
+    }
+    return _jsx(Text, { children: elements });
 }

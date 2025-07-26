@@ -4,7 +4,7 @@ import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { Box, render } from 'ink'
 import yaml from 'js-yaml'
-import { SlideShow } from './index.js'
+import { SlideShow } from './components/SlideShow.js'
 import type { SlideData } from './types/slide.js'
 import { validateSlideData } from './utils/slideValidator.js'
 

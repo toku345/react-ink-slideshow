@@ -44,7 +44,7 @@ export function processContent(content: string): React.JSX.Element {
   })
 
   // 未閉じのコードブロックがある場合の警告
-  if (inCodeBlock && process.env.NODE_ENV !== 'production') {
+  if (inCodeBlock && process.env.NODE_ENV !== 'production' && codeBlockStartIndex !== -1) {
     console.warn(`Warning: Unclosed code block starting at line ${codeBlockStartIndex + 1}`)
   }
 

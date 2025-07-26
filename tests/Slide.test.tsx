@@ -1,5 +1,5 @@
 import { render } from 'ink-testing-library'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { Slide } from '../src/components/Slide.js'
 
 describe('Slide', () => {
@@ -85,5 +85,41 @@ Line 4`
     expect(line3Index - line1Index).toBeGreaterThan(1)
     // Line 3とLine 4は連続していることを確認
     expect(line4Index - line3Index).toBe(1)
+  })
+
+  it('should warn about unclosed code blocks in development', () => {
+    const originalEnv = process.env.NODE_ENV
+    process.env.NODE_ENV = 'development'
+    const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    
+    const content = `Some text
+\`\`\`javascript
+const foo = 'bar'
+// Missing closing backticks`
+    
+    render(<Slide content={content} />)
+    
+    expect(consoleWarnSpy).toHaveBeenCalledWith('Warning: Unclosed code block starting at line 2')
+    
+    consoleWarnSpy.mockRestore()
+    process.env.NODE_ENV = originalEnv
+  })
+
+  it('should not warn about unclosed code blocks in production', () => {
+    const originalEnv = process.env.NODE_ENV
+    process.env.NODE_ENV = 'production'
+    const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    
+    const content = `Some text
+\`\`\`javascript
+const foo = 'bar'
+// Missing closing backticks`
+    
+    render(<Slide content={content} />)
+    
+    expect(consoleWarnSpy).not.toHaveBeenCalled()
+    
+    consoleWarnSpy.mockRestore()
+    process.env.NODE_ENV = originalEnv
   })
 })

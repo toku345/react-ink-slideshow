@@ -5,7 +5,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { Box, render } from 'ink';
 import yaml from 'js-yaml';
-import { SlideShow } from './index.js';
+import { SlideShow } from './components/SlideShow.js';
 import { validateSlideData } from './utils/slideValidator.js';
 // YAMLファイル読み込み
 // Note: js-yaml v4.x では load() がデフォルトで安全になったため、safeLoad() は削除されました

@@ -25,28 +25,6 @@ npm install
 npm run dev
 ```
 
-### プログラムから使用
-
-```typescript
-import { render } from 'ink'
-import { SlideShow } from 'react-ink-slideshow'
-
-const slides = [
-  {
-    title: 'スライド1',
-    content: 'コンテンツ'
-  },
-  {
-    title: 'スライド2',
-    content: `複数行の
-コンテンツも
-サポート`
-  }
-]
-
-render(<SlideShow slides={slides} />)
-```
-
 ## キーボード操作
 
 - `←` / `→`: 前/次のスライドへ移動

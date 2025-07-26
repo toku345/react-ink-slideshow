@@ -6,7 +6,6 @@ export function processContent(content: string): React.JSX.Element {
   let inCodeBlock = false
   let codeBlockStartIndex = -1
   const elements: React.ReactNode[] = []
-  let elementIndex = 0
 
   lines.forEach((line, index) => {
     if (line.startsWith('```')) {
@@ -19,24 +18,28 @@ export function processContent(content: string): React.JSX.Element {
 
     // 最初の行以外は改行を追加
     if (elements.length > 0) {
-      elements.push(<Newline key={`newline-${elementIndex++}`} />)
+      // biome-ignore lint/suspicious/noArrayIndexKey: スライドコンテンツは静的であり、順序が変更されることはないため
+      elements.push(<Newline key={`newline-${index}`} />)
     }
 
     if (inCodeBlock) {
       elements.push(
-        <Text key={`line-${elementIndex++}`} color="green">
+        // biome-ignore lint/suspicious/noArrayIndexKey: スライドコンテンツは静的であり、順序が変更されることはないため
+        <Text key={`line-${index}`} color="green">
           {'  '}
           {line}
         </Text>,
       )
     } else if (line.startsWith('#')) {
       elements.push(
-        <Text key={`line-${elementIndex++}`} bold color="cyan">
+        // biome-ignore lint/suspicious/noArrayIndexKey: スライドコンテンツは静的であり、順序が変更されることはないため
+        <Text key={`line-${index}`} bold color="cyan">
           {line}
         </Text>,
       )
     } else {
-      elements.push(<Text key={`line-${elementIndex++}`}>{line}</Text>)
+      // biome-ignore lint/suspicious/noArrayIndexKey: スライドコンテンツは静的であり、順序が変更されることはないため
+      elements.push(<Text key={`line-${index}`}>{line}</Text>)
     }
   })
 

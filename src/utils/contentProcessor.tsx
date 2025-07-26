@@ -95,7 +95,7 @@ function renderElements(elements: ContentElement[]): React.ReactNode[] {
   })
 }
 
-function renderElement(element: ContentElement, index: number): React.ReactNode {
+function renderElement(element: ContentElement, index: number): React.ReactNode | null {
   switch (element.type) {
     case 'heading':
       return (

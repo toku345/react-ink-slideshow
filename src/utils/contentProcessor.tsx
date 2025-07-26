@@ -87,6 +87,10 @@ function parseCodeBlock(
 function renderElements(elements: ContentElement[]): React.ReactNode[] {
   return elements.flatMap((element, index) => {
     const rendered = renderElement(element, index)
+    // nullの場合は配列に含めない
+    if (rendered === null) {
+      return []
+    }
     if (index > 0) {
       // biome-ignore lint/suspicious/noArrayIndexKey: スライドコンテンツは静的であり、順序が変更されることはないため
       return [<Newline key={`newline-${index}`} />, rendered]

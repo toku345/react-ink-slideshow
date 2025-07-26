@@ -3,12 +3,12 @@ import { Newline, Text } from 'ink';
 export function processContent(content) {
     const lines = content.split('\n');
     let inCodeBlock = false;
-    let codeBlockStartIndex = -1;
+    let codeBlockStartLine = -1;
     const elements = [];
     lines.forEach((line, index) => {
         if (line.startsWith('```')) {
             if (!inCodeBlock) {
-                codeBlockStartIndex = index;
+                codeBlockStartLine = index;
             }
             inCodeBlock = !inCodeBlock;
             return;
@@ -34,8 +34,10 @@ export function processContent(content) {
         }
     });
     // 未閉じのコードブロックがある場合の警告
-    if (inCodeBlock && process.env.NODE_ENV !== 'production' && codeBlockStartIndex !== -1) {
-        console.warn(`Warning: Unclosed code block starting at line ${codeBlockStartIndex + 1}`);
+    // codeBlockStartLine !== -1 のチェックは論理的には不要だが、
+    // 防御的プログラミングの観点から明示的にチェック
+    if (inCodeBlock && process.env.NODE_ENV !== 'production' && codeBlockStartLine !== -1) {
+        console.warn(`Warning: Unclosed code block starting at line ${codeBlockStartLine + 1}`);
     }
     return _jsx(Text, { children: elements });
 }

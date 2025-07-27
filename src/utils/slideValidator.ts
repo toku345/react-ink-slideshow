@@ -21,7 +21,7 @@ function isStringField(obj: Record<string, unknown>, field: string): boolean {
 
 /**
  * オプションフィールドのバリデーション
- * @param obj チェック対象のオブジェクト  
+ * @param obj チェック対象のオブジェクト
  * @param field チェックするフィールド名
  * @returns フィールドが存在しないか、string型の場合true
  */
@@ -45,9 +45,7 @@ export function isTitleSlide(slide: unknown): slide is TitleSlideData {
   }
 
   // オプションフィールドのチェック
-  return (
-    isOptionalStringField(slide, 'subtitle') && isOptionalStringField(slide, 'author')
-  )
+  return isOptionalStringField(slide, 'subtitle') && isOptionalStringField(slide, 'author')
 }
 
 /**

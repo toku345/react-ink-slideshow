@@ -1,0 +1,1 @@
+{"version":3,"file":"TimerDisplay.d.ts","sourceRoot":"","sources":["../../src/components/TimerDisplay.tsx"],"names":[],"mappings":"AACA,OAAO,KAA8B,MAAM,OAAO,CAAA;AAElD,UAAU,iBAAiB;IACzB,gBAAgB,EAAE,MAAM,CAAA;IACxB,SAAS,EAAE,OAAO,CAAA;CACnB;AAED,eAAO,MAAM,YAAY,EAAE,KAAK,CAAC,EAAE,CAAC,iBAAiB,CAkCpD,CAAA"}

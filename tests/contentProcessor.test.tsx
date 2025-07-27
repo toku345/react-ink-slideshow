@@ -174,5 +174,24 @@ describe('processContent', () => {
       const output = lastFrame()
       expect(output).toContain('これは**不完全なテキスト')
     })
+
+    it('ネストされたアスタリスクを含むボールドテキストを処理できる', () => {
+      const content = '**text with * asterisk**は正しく表示される'
+      const { lastFrame } = render(processContent(content))
+      const output = lastFrame()
+      expect(output).toContain('text with * asterisk')
+      expect(output).toContain('は正しく表示される')
+    })
+
+    it('同じテキストが複数回出現してもキーの重複が発生しない', () => {
+      const content = '**重要**なことと、もう一つ**重要**なこと'
+      // エラーが発生しないことを確認（Reactキーの重複エラーが発生しない）
+      expect(() => render(processContent(content))).not.toThrow()
+      const { lastFrame } = render(processContent(content))
+      const output = lastFrame()
+      expect(output).toContain('重要')
+      expect(output).toContain('なことと、もう一つ')
+      expect(output).toContain('なこと')
+    })
   })
 })

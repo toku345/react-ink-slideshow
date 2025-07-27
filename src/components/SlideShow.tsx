@@ -18,18 +18,12 @@ export const SlideShow: React.FC<SlideShowProps> = ({ slides }) => {
   const timer = useTimer()
   const { currentSlide } = useKeyboardNavigation(slides.length, exit, timer)
 
-  if (slides.length === 0) {
-    return (
-      <Box flexDirection="column" padding={1}>
-        <Text color="red">No slides available</Text>
-      </Box>
-    )
-  }
-
-  const currentSlideData = slides[currentSlide]
-
   // スライドコンテンツをメモ化して、タイマー更新時の再レンダリングを防ぐ
   const slideContent = useMemo(() => {
+    if (slides.length === 0) {
+      return null
+    }
+    const currentSlideData = slides[currentSlide]
     if (currentSlideData.type === 'title') {
       return (
         <TitleSlide
@@ -40,7 +34,15 @@ export const SlideShow: React.FC<SlideShowProps> = ({ slides }) => {
       )
     }
     return <Slide title={currentSlideData.title} content={currentSlideData.content} />
-  }, [currentSlide, currentSlideData])
+  }, [currentSlide, slides])
+
+  if (slides.length === 0) {
+    return (
+      <Box flexDirection="column" padding={1}>
+        <Text color="red">No slides available</Text>
+      </Box>
+    )
+  }
 
   const terminalHeight = stdout.rows || 30
   const terminalWidth = stdout.columns || 80

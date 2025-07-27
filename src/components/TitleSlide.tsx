@@ -1,4 +1,4 @@
-import { Box, Static, Text } from 'ink'
+import { Box, Text } from 'ink'
 import BigText from 'ink-big-text'
 import Gradient from 'ink-gradient'
 import React from 'react'
@@ -12,13 +12,9 @@ interface TitleSlideProps {
 export const TitleSlide: React.FC<TitleSlideProps> = React.memo(({ title, subtitle, author }) => {
   return (
     <Box flexDirection="column" alignItems="center" justifyContent="center" width="100%">
-      <Static items={[{ key: 'title', content: title }]}>
-        {(item) => (
-          <Gradient name="rainbow">
-            <BigText text={item.content} />
-          </Gradient>
-        )}
-      </Static>
+      <Gradient name="rainbow">
+        <BigText text={title} />
+      </Gradient>
       {subtitle && (
         <Box marginTop={2}>
           <Text bold color="cyan">

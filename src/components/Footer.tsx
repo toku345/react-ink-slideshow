@@ -1,8 +1,8 @@
 import { Box, Text } from 'ink'
 import React from 'react'
 import type { UseTimerReturn } from '../hooks/useTimer.js'
+import { OptimizedTimerDisplay } from './OptimizedTimerDisplay.js'
 import { ProgressBar } from './ProgressBar.js'
-import { TimerDisplay } from './TimerDisplay.js'
 
 interface FooterProps {
   currentSlide: number
@@ -30,7 +30,10 @@ export const Footer: React.FC<FooterProps> = React.memo(({ currentSlide, totalSl
 
       {/* タイマー表示 */}
       <Box marginBottom={1}>
-        <TimerDisplay remainingSeconds={timer.remainingSeconds} isRunning={timer.isRunning} />
+        <OptimizedTimerDisplay
+          remainingSeconds={timer.remainingSeconds}
+          isRunning={timer.isRunning}
+        />
       </Box>
 
       {/* ナビゲーション情報 */}

@@ -5,6 +5,7 @@ import { useTimer } from '../hooks/useTimer.js'
 import type { SlideData } from '../types/slide.js'
 import { Footer } from './Footer.js'
 import { Slide } from './Slide.js'
+import { SlideContainer } from './SlideContainer.js'
 import { TitleSlide } from './TitleSlide.js'
 
 interface SlideShowProps {
@@ -48,14 +49,13 @@ export const SlideShow: React.FC<SlideShowProps> = ({ slides }) => {
   return (
     <Box flexDirection="column" height={terminalHeight} width={terminalWidth}>
       {/* スライド本体 */}
-      <Box
-        flexGrow={1}
-        height={terminalHeight - footerHeight}
-        width={terminalWidth}
-        justifyContent="center"
+      <SlideContainer
+        terminalHeight={terminalHeight}
+        terminalWidth={terminalWidth}
+        footerHeight={footerHeight}
       >
         {slideContent}
-      </Box>
+      </SlideContainer>
 
       {/* フッター */}
       <Footer currentSlide={currentSlide} totalSlides={slides.length} timer={timer} />

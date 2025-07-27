@@ -99,17 +99,19 @@ function renderElement(element, index) {
 }
 function renderTextWithFormatting(text) {
     const parts = [];
-    const boldRegex = /\*\*([^*]+)\*\*/g;
+    // ネストされたアスタリスクにも対応する正規表現
+    const boldRegex = /\*\*([^*]+(?:\*(?!\*)[^*]*)*)\*\*/g;
     let lastIndex = 0;
     let match;
+    let keyIndex = 0;
     match = boldRegex.exec(text);
     while (match !== null) {
         // 通常のテキスト部分
         if (match.index > lastIndex) {
             parts.push(text.slice(lastIndex, match.index));
         }
-        // ボールドテキスト部分
-        parts.push(_jsx(Text, { bold: true, children: match[1] }, `bold-${match.index}`));
+        // ボールドテキスト部分（一意なキーを使用）
+        parts.push(_jsx(Text, { bold: true, children: match[1] }, `bold-${keyIndex++}`));
         lastIndex = match.index + match[0].length;
         match = boldRegex.exec(text);
     }

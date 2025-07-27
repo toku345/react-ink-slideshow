@@ -121,7 +121,7 @@ function renderElement(element: ContentElement, index: number): React.ReactNode 
       )
 
     case 'text':
-      return <Text key={`text-${index}`}>{element.content}</Text>
+      return <Text key={`text-${index}`}>{renderTextWithFormatting(element.content)}</Text>
 
     case 'codeBlock':
       if (element.lines.length === 0) {
@@ -149,6 +149,40 @@ function renderElement(element: ContentElement, index: number): React.ReactNode 
         ))
       }
   }
+}
+
+function renderTextWithFormatting(text: string): React.ReactNode {
+  const parts: React.ReactNode[] = []
+  // ネストされたアスタリスクにも対応する正規表現
+  const boldRegex = /\*\*([^*]+(?:\*(?!\*)[^*]*)*)\*\*/g
+  let lastIndex = 0
+  let match: RegExpExecArray | null
+  let keyIndex = 0
+
+  match = boldRegex.exec(text)
+  while (match !== null) {
+    // 通常のテキスト部分
+    if (match.index > lastIndex) {
+      parts.push(text.slice(lastIndex, match.index))
+    }
+
+    // ボールドテキスト部分（一意なキーを使用）
+    parts.push(
+      <Text key={`bold-${keyIndex++}`} bold>
+        {match[1]}
+      </Text>,
+    )
+
+    lastIndex = match.index + match[0].length
+    match = boldRegex.exec(text)
+  }
+
+  // 最後の通常テキスト部分
+  if (lastIndex < text.length) {
+    parts.push(text.slice(lastIndex))
+  }
+
+  return parts.length === 0 ? text : parts
 }
 
 export function processContent(content: string): React.JSX.Element {

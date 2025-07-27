@@ -1,10 +1,14 @@
 import type { ContentSlideData, SlideData, TitleSlideData } from '../types/slide.js';
 /**
  * タイトルスライドかどうかを判定する型ガード関数
+ * @param slide チェック対象のスライドデータ
+ * @returns タイトルスライドの場合true
  */
 export declare function isTitleSlide(slide: unknown): slide is TitleSlideData;
 /**
  * コンテンツスライドかどうかを判定する型ガード関数
+ * @param slide チェック対象のスライドデータ
+ * @returns コンテンツスライドの場合true
  */
 export declare function isContentSlide(slide: unknown): slide is ContentSlideData;
 /**

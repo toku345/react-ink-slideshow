@@ -1,44 +1,56 @@
 /**
  * 基本的なオブジェクトバリデーション
+ * @param value チェック対象の値
+ * @returns オブジェクトかつnullでない場合true
  */
 function isValidObject(value) {
     return typeof value === 'object' && value !== null;
 }
 /**
  * フィールドの型チェック
+ * @param obj チェック対象のオブジェクト
+ * @param field チェックするフィールド名
+ * @returns フィールドが存在し、string型の場合true
  */
-function hasStringField(obj, field) {
+function isStringField(obj, field) {
     return field in obj && typeof obj[field] === 'string';
 }
 /**
  * オプションフィールドのバリデーション
+ * @param obj チェック対象のオブジェクト
+ * @param field チェックするフィールド名
+ * @returns フィールドが存在しないか、string型の場合true
  */
-function validateOptionalStringField(obj, field) {
+function isOptionalStringField(obj, field) {
     return !(field in obj) || typeof obj[field] === 'string';
 }
 /**
  * タイトルスライドかどうかを判定する型ガード関数
+ * @param slide チェック対象のスライドデータ
+ * @returns タイトルスライドの場合true
  */
 export function isTitleSlide(slide) {
     if (!isValidObject(slide)) {
         return false;
     }
     // 必須フィールドのチェック
-    if (!('type' in slide) || slide.type !== 'title' || !hasStringField(slide, 'title')) {
+    if (!('type' in slide) || slide.type !== 'title' || !isStringField(slide, 'title')) {
         return false;
     }
     // オプションフィールドのチェック
-    return (validateOptionalStringField(slide, 'subtitle') && validateOptionalStringField(slide, 'author'));
+    return (isOptionalStringField(slide, 'subtitle') && isOptionalStringField(slide, 'author'));
 }
 /**
  * コンテンツスライドかどうかを判定する型ガード関数
+ * @param slide チェック対象のスライドデータ
+ * @returns コンテンツスライドの場合true
  */
 export function isContentSlide(slide) {
     if (!isValidObject(slide)) {
         return false;
     }
     // 必須フィールドのチェック
-    if (!hasStringField(slide, 'content')) {
+    if (!isStringField(slide, 'content')) {
         return false;
     }
     // typeフィールドのチェック（未定義またはcontentのみ許可）
@@ -46,7 +58,7 @@ export function isContentSlide(slide) {
         return false;
     }
     // オプションフィールドのチェック
-    return validateOptionalStringField(slide, 'title');
+    return isOptionalStringField(slide, 'title');
 }
 /**
  * スライドデータのバリデーションを実行

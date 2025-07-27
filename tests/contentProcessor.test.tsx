@@ -1,5 +1,5 @@
 import { render } from 'ink-testing-library'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { processContent } from '../src/utils/contentProcessor'
 
 describe('processContent', () => {
@@ -130,5 +130,49 @@ describe('processContent', () => {
     expect(output).toContain('template')
     expect(output).toContain('Hello')
     expect(output).toContain('name')
+  })
+
+  describe('テキストフォーマット', () => {
+    it('**テキスト**をボールドで表示する', () => {
+      const content = 'これは**重要な**テキストです'
+      const { lastFrame } = render(processContent(content))
+      const output = lastFrame()
+      expect(output).toContain('これは')
+      expect(output).toContain('重要な')
+      expect(output).toContain('テキストです')
+    })
+
+    it('複数のボールドテキストを処理できる', () => {
+      const content = '**最初**の部分と**二番目**の部分'
+      const { lastFrame } = render(processContent(content))
+      const output = lastFrame()
+      expect(output).toContain('最初')
+      expect(output).toContain('の部分と')
+      expect(output).toContain('二番目')
+      expect(output).toContain('の部分')
+    })
+
+    it('ボールドテキストが行頭にある場合', () => {
+      const content = '**重要**：この内容に注意'
+      const { lastFrame } = render(processContent(content))
+      const output = lastFrame()
+      expect(output).toContain('重要')
+      expect(output).toContain('：この内容に注意')
+    })
+
+    it('ボールドテキストが行末にある場合', () => {
+      const content = 'この内容は**重要**'
+      const { lastFrame } = render(processContent(content))
+      const output = lastFrame()
+      expect(output).toContain('この内容は')
+      expect(output).toContain('重要')
+    })
+
+    it('ボールドマークが不完全な場合は通常のテキストとして扱う', () => {
+      const content = 'これは**不完全なテキスト'
+      const { lastFrame } = render(processContent(content))
+      const output = lastFrame()
+      expect(output).toContain('これは**不完全なテキスト')
+    })
   })
 })

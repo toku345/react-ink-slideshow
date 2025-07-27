@@ -2,6 +2,8 @@ import type { ContentSlideData, SlideData, TitleSlideData } from '../types/slide
 
 /**
  * 基本的なオブジェクトバリデーション
+ * @param value チェック対象の値
+ * @returns オブジェクトかつnullでない場合true
  */
 function isValidObject(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null
@@ -9,6 +11,9 @@ function isValidObject(value: unknown): value is Record<string, unknown> {
 
 /**
  * フィールドの型チェック
+ * @param obj チェック対象のオブジェクト
+ * @param field チェックするフィールド名
+ * @returns フィールドが存在し、string型の場合true
  */
 function isStringField(obj: Record<string, unknown>, field: string): boolean {
   return field in obj && typeof obj[field] === 'string'
@@ -16,6 +21,9 @@ function isStringField(obj: Record<string, unknown>, field: string): boolean {
 
 /**
  * オプションフィールドのバリデーション
+ * @param obj チェック対象のオブジェクト  
+ * @param field チェックするフィールド名
+ * @returns フィールドが存在しないか、string型の場合true
  */
 function isOptionalStringField(obj: Record<string, unknown>, field: string): boolean {
   return !(field in obj) || typeof obj[field] === 'string'
@@ -23,6 +31,8 @@ function isOptionalStringField(obj: Record<string, unknown>, field: string): boo
 
 /**
  * タイトルスライドかどうかを判定する型ガード関数
+ * @param slide チェック対象のスライドデータ
+ * @returns タイトルスライドの場合true
  */
 export function isTitleSlide(slide: unknown): slide is TitleSlideData {
   if (!isValidObject(slide)) {
@@ -42,6 +52,8 @@ export function isTitleSlide(slide: unknown): slide is TitleSlideData {
 
 /**
  * コンテンツスライドかどうかを判定する型ガード関数
+ * @param slide チェック対象のスライドデータ
+ * @returns コンテンツスライドの場合true
  */
 export function isContentSlide(slide: unknown): slide is ContentSlideData {
   if (!isValidObject(slide)) {

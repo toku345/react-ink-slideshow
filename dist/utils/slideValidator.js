@@ -38,7 +38,7 @@ export function isTitleSlide(slide) {
         return false;
     }
     // オプションフィールドのチェック
-    return (isOptionalStringField(slide, 'subtitle') && isOptionalStringField(slide, 'author'));
+    return isOptionalStringField(slide, 'subtitle') && isOptionalStringField(slide, 'author');
 }
 /**
  * コンテンツスライドかどうかを判定する型ガード関数

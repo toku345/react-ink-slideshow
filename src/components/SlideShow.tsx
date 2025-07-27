@@ -1,11 +1,10 @@
 import { Box, Text, useApp, useStdout } from 'ink'
-import React from 'react'
+import React, { useMemo } from 'react'
 import { useKeyboardNavigation } from '../hooks/useKeyboardNavigation.js'
 import { useTimer } from '../hooks/useTimer.js'
 import type { SlideData } from '../types/slide.js'
-import { ProgressBar } from './ProgressBar.js'
+import { Footer } from './Footer.js'
 import { Slide } from './Slide.js'
-import { TimerDisplay } from './TimerDisplay.js'
 import { TitleSlide } from './TitleSlide.js'
 
 interface SlideShowProps {
@@ -28,7 +27,8 @@ export const SlideShow: React.FC<SlideShowProps> = ({ slides }) => {
 
   const currentSlideData = slides[currentSlide]
 
-  const renderSlide = () => {
+  // スライドコンテンツをメモ化して、タイマー更新時の再レンダリングを防ぐ
+  const slideContent = useMemo(() => {
     if (currentSlideData.type === 'title') {
       return (
         <TitleSlide
@@ -39,7 +39,7 @@ export const SlideShow: React.FC<SlideShowProps> = ({ slides }) => {
       )
     }
     return <Slide title={currentSlideData.title} content={currentSlideData.content} />
-  }
+  }, [currentSlide, currentSlideData])
 
   const terminalHeight = stdout.rows || 30
   const terminalWidth = stdout.columns || 80
@@ -54,37 +54,11 @@ export const SlideShow: React.FC<SlideShowProps> = ({ slides }) => {
         width={terminalWidth}
         justifyContent="center"
       >
-        {renderSlide()}
+        {slideContent}
       </Box>
 
       {/* フッター */}
-      <Box
-        flexDirection="column"
-        borderStyle="single"
-        borderTop
-        paddingTop={1}
-        paddingBottom={1}
-        paddingLeft={2}
-        paddingRight={2}
-      >
-        {/* プログレスバー */}
-        <Box marginBottom={1}>
-          <ProgressBar currentSlide={currentSlide} totalSlides={slides.length} />
-        </Box>
-
-        {/* タイマー表示 */}
-        <Box marginBottom={1}>
-          <TimerDisplay remainingSeconds={timer.remainingSeconds} isRunning={timer.isRunning} />
-        </Box>
-
-        {/* ナビゲーション情報 */}
-        <Box justifyContent="space-between">
-          <Text>
-            Slide {currentSlide + 1} / {slides.length}
-          </Text>
-          <Text dimColor>← → Navigate | 0/9 First/Last | t Timer | r Reset | q Quit</Text>
-        </Box>
-      </Box>
+      <Footer currentSlide={currentSlide} totalSlides={slides.length} timer={timer} />
     </Box>
   )
 }

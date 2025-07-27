@@ -1,10 +1,10 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { Box, Text, useApp, useStdout } from 'ink';
+import { useMemo } from 'react';
 import { useKeyboardNavigation } from '../hooks/useKeyboardNavigation.js';
 import { useTimer } from '../hooks/useTimer.js';
-import { ProgressBar } from './ProgressBar.js';
+import { Footer } from './Footer.js';
 import { Slide } from './Slide.js';
-import { TimerDisplay } from './TimerDisplay.js';
 import { TitleSlide } from './TitleSlide.js';
 export const SlideShow = ({ slides }) => {
     const { exit } = useApp();
@@ -15,14 +15,15 @@ export const SlideShow = ({ slides }) => {
         return (_jsx(Box, { flexDirection: "column", padding: 1, children: _jsx(Text, { color: "red", children: "No slides available" }) }));
     }
     const currentSlideData = slides[currentSlide];
-    const renderSlide = () => {
+    // スライドコンテンツをメモ化して、タイマー更新時の再レンダリングを防ぐ
+    const slideContent = useMemo(() => {
         if (currentSlideData.type === 'title') {
             return (_jsx(TitleSlide, { title: currentSlideData.title, subtitle: currentSlideData.subtitle, author: currentSlideData.author }));
         }
         return _jsx(Slide, { title: currentSlideData.title, content: currentSlideData.content });
-    };
+    }, [currentSlide, currentSlideData]);
     const terminalHeight = stdout.rows || 30;
     const terminalWidth = stdout.columns || 80;
     const footerHeight = 7;
-    return (_jsxs(Box, { flexDirection: "column", height: terminalHeight, width: terminalWidth, children: [_jsx(Box, { flexGrow: 1, height: terminalHeight - footerHeight, width: terminalWidth, justifyContent: "center", children: renderSlide() }), _jsxs(Box, { flexDirection: "column", borderStyle: "single", borderTop: true, paddingTop: 1, paddingBottom: 1, paddingLeft: 2, paddingRight: 2, children: [_jsx(Box, { marginBottom: 1, children: _jsx(ProgressBar, { currentSlide: currentSlide, totalSlides: slides.length }) }), _jsx(Box, { marginBottom: 1, children: _jsx(TimerDisplay, { remainingSeconds: timer.remainingSeconds, isRunning: timer.isRunning }) }), _jsxs(Box, { justifyContent: "space-between", children: [_jsxs(Text, { children: ["Slide ", currentSlide + 1, " / ", slides.length] }), _jsx(Text, { dimColor: true, children: "\u2190 \u2192 Navigate | 0/9 First/Last | t Timer | r Reset | q Quit" })] })] })] }));
+    return (_jsxs(Box, { flexDirection: "column", height: terminalHeight, width: terminalWidth, children: [_jsx(Box, { flexGrow: 1, height: terminalHeight - footerHeight, width: terminalWidth, justifyContent: "center", children: slideContent }), _jsx(Footer, { currentSlide: currentSlide, totalSlides: slides.length, timer: timer })] }));
 };

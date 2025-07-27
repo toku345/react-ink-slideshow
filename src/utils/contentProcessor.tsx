@@ -153,9 +153,11 @@ function renderElement(element: ContentElement, index: number): React.ReactNode 
 
 function renderTextWithFormatting(text: string): React.ReactNode {
   const parts: React.ReactNode[] = []
-  const boldRegex = /\*\*([^*]+)\*\*/g
+  // ネストされたアスタリスクにも対応する正規表現
+  const boldRegex = /\*\*([^*]+(?:\*(?!\*)[^*]*)*)\*\*/g
   let lastIndex = 0
   let match: RegExpExecArray | null
+  let keyIndex = 0
 
   match = boldRegex.exec(text)
   while (match !== null) {
@@ -164,9 +166,9 @@ function renderTextWithFormatting(text: string): React.ReactNode {
       parts.push(text.slice(lastIndex, match.index))
     }
 
-    // ボールドテキスト部分
+    // ボールドテキスト部分（一意なキーを使用）
     parts.push(
-      <Text key={`bold-${match.index}`} bold>
+      <Text key={`bold-${keyIndex++}`} bold>
         {match[1]}
       </Text>,
     )

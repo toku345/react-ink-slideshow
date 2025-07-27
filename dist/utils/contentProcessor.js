@@ -82,7 +82,7 @@ function renderElement(element, index) {
         case 'heading':
             return (_jsx(Text, { bold: true, color: "cyan", children: element.content }, `heading-${index}`));
         case 'text':
-            return _jsx(Text, { children: element.content }, `text-${index}`);
+            return _jsx(Text, { children: renderTextWithFormatting(element.content) }, `text-${index}`);
         case 'codeBlock':
             if (element.lines.length === 0) {
                 return null;
@@ -96,6 +96,28 @@ function renderElement(element, index) {
                 _jsxs(React.Fragment, { children: [lineIndex > 0 && _jsx(Newline, {}), _jsxs(Text, { color: "green", children: ['  ', line] })] }, `code-${index}-${lineIndex}`)));
             }
     }
+}
+function renderTextWithFormatting(text) {
+    const parts = [];
+    const boldRegex = /\*\*([^*]+)\*\*/g;
+    let lastIndex = 0;
+    let match;
+    match = boldRegex.exec(text);
+    while (match !== null) {
+        // 通常のテキスト部分
+        if (match.index > lastIndex) {
+            parts.push(text.slice(lastIndex, match.index));
+        }
+        // ボールドテキスト部分
+        parts.push(_jsx(Text, { bold: true, children: match[1] }, `bold-${match.index}`));
+        lastIndex = match.index + match[0].length;
+        match = boldRegex.exec(text);
+    }
+    // 最後の通常テキスト部分
+    if (lastIndex < text.length) {
+        parts.push(text.slice(lastIndex));
+    }
+    return parts.length === 0 ? text : parts;
 }
 export function processContent(content) {
     const elements = parseContent(content);

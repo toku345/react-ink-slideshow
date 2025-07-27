@@ -12,7 +12,9 @@ export interface UseTimerReturn {
 const DEFAULT_DURATION_SECONDS = 300 // 5分
 
 export const useTimer = (durationSeconds = DEFAULT_DURATION_SECONDS): UseTimerReturn => {
-  const [remainingSeconds, setRemainingSeconds] = useState(durationSeconds)
+  // 負の値が渡された場合は0にする
+  const validDuration = Math.max(0, durationSeconds)
+  const [remainingSeconds, setRemainingSeconds] = useState(validDuration)
   const [isRunning, setIsRunning] = useState(false)
   const intervalRef = useRef<NodeJS.Timeout | null>(null)
 
@@ -36,7 +38,7 @@ export const useTimer = (durationSeconds = DEFAULT_DURATION_SECONDS): UseTimerRe
 
   const reset = () => {
     setIsRunning(false)
-    setRemainingSeconds(durationSeconds)
+    setRemainingSeconds(validDuration)
   }
 
   useEffect(() => {

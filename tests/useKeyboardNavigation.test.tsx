@@ -3,6 +3,7 @@ import { Box, Text } from 'ink'
 import { render } from 'ink-testing-library'
 import { describe, expect, it, vi } from 'vitest'
 import { useKeyboardNavigation } from '../src/hooks/useKeyboardNavigation.js'
+import type { UseTimerReturn } from '../src/hooks/useTimer.js'
 
 // ink's useInput をモック
 vi.mock('ink', async () => {
@@ -14,8 +15,8 @@ vi.mock('ink', async () => {
 })
 
 // テスト用コンポーネント
-function TestComponent({ totalSlides, onExit }: { totalSlides: number; onExit?: () => void }) {
-  const { currentSlide } = useKeyboardNavigation(totalSlides, onExit)
+function TestComponent({ totalSlides, onExit, timer }: { totalSlides: number; onExit?: () => void; timer?: UseTimerReturn }) {
+  const { currentSlide } = useKeyboardNavigation(totalSlides, onExit, timer)
   return (
     <Box>
       <Text>{`Current slide: ${currentSlide}`}</Text>
@@ -166,5 +167,53 @@ describe('useKeyboardNavigation', () => {
     // qキーで終了
     inputHandler('q', {})
     expect(mockExit).toHaveBeenCalled()
+  })
+
+  it('should toggle timer on t key', async () => {
+    const { useInput } = await import('ink')
+    let inputHandler: any
+
+    vi.mocked(useInput).mockImplementation((handler) => {
+      inputHandler = handler
+    })
+
+    const mockTimer: UseTimerReturn = {
+      remainingSeconds: 300,
+      isRunning: false,
+      start: vi.fn(),
+      stop: vi.fn(),
+      toggle: vi.fn(),
+      reset: vi.fn(),
+    }
+
+    render(<TestComponent totalSlides={5} timer={mockTimer} />)
+
+    // tキーでタイマートグル
+    inputHandler('t', {})
+    expect(mockTimer.toggle).toHaveBeenCalled()
+  })
+
+  it('should reset timer on r key', async () => {
+    const { useInput } = await import('ink')
+    let inputHandler: any
+
+    vi.mocked(useInput).mockImplementation((handler) => {
+      inputHandler = handler
+    })
+
+    const mockTimer: UseTimerReturn = {
+      remainingSeconds: 150,
+      isRunning: true,
+      start: vi.fn(),
+      stop: vi.fn(),
+      toggle: vi.fn(),
+      reset: vi.fn(),
+    }
+
+    render(<TestComponent totalSlides={5} timer={mockTimer} />)
+
+    // rキーでタイマーリセット
+    inputHandler('r', {})
+    expect(mockTimer.reset).toHaveBeenCalled()
   })
 })

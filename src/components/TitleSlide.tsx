@@ -9,7 +9,7 @@ interface TitleSlideProps {
   author?: string
 }
 
-export const TitleSlide: React.FC<TitleSlideProps> = ({ title, subtitle, author }) => {
+export const TitleSlide: React.FC<TitleSlideProps> = React.memo(({ title, subtitle, author }) => {
   return (
     <Box flexDirection="column" alignItems="center" justifyContent="center" width="100%">
       <Gradient name="rainbow">
@@ -29,4 +29,4 @@ export const TitleSlide: React.FC<TitleSlideProps> = ({ title, subtitle, author 
       )}
     </Box>
   )
-}
+})

@@ -1,10 +1,15 @@
 import { Box, Text, useApp, useStdout } from 'ink'
-import React from 'react'
+import React, { useMemo } from 'react'
 import { useKeyboardNavigation } from '../hooks/useKeyboardNavigation.js'
+import { useTimer } from '../hooks/useTimer.js'
 import type { SlideData } from '../types/slide.js'
-import { ProgressBar } from './ProgressBar.js'
+import { Footer } from './Footer.js'
 import { Slide } from './Slide.js'
+import { SlideContainer } from './SlideContainer.js'
 import { TitleSlide } from './TitleSlide.js'
+
+// フッターの高さを定数化（ボーダー、パディング、3行分のコンテンツ）
+const FOOTER_HEIGHT = 7
 
 interface SlideShowProps {
   slides: SlideData[]
@@ -13,19 +18,15 @@ interface SlideShowProps {
 export const SlideShow: React.FC<SlideShowProps> = ({ slides }) => {
   const { exit } = useApp()
   const { stdout } = useStdout()
-  const { currentSlide } = useKeyboardNavigation(slides.length, exit)
+  const timer = useTimer()
+  const { currentSlide } = useKeyboardNavigation(slides.length, exit, timer)
 
-  if (slides.length === 0) {
-    return (
-      <Box flexDirection="column" padding={1}>
-        <Text color="red">No slides available</Text>
-      </Box>
-    )
-  }
-
-  const currentSlideData = slides[currentSlide]
-
-  const renderSlide = () => {
+  // スライドコンテンツをメモ化して、タイマー更新時の再レンダリングを防ぐ
+  const slideContent = useMemo(() => {
+    if (slides.length === 0) {
+      return null
+    }
+    const currentSlideData = slides[currentSlide]
     if (currentSlideData.type === 'title') {
       return (
         <TitleSlide
@@ -36,47 +37,32 @@ export const SlideShow: React.FC<SlideShowProps> = ({ slides }) => {
       )
     }
     return <Slide title={currentSlideData.title} content={currentSlideData.content} />
+  }, [currentSlide, slides])
+
+  if (slides.length === 0) {
+    return (
+      <Box flexDirection="column" padding={1}>
+        <Text color="red">No slides available</Text>
+      </Box>
+    )
   }
 
   const terminalHeight = stdout.rows || 30
   const terminalWidth = stdout.columns || 80
-  const footerHeight = 6
 
   return (
     <Box flexDirection="column" height={terminalHeight} width={terminalWidth}>
       {/* スライド本体 */}
-      <Box
-        flexGrow={1}
-        height={terminalHeight - footerHeight}
-        width={terminalWidth}
-        justifyContent="center"
+      <SlideContainer
+        terminalHeight={terminalHeight}
+        terminalWidth={terminalWidth}
+        footerHeight={FOOTER_HEIGHT}
       >
-        {renderSlide()}
-      </Box>
+        {slideContent}
+      </SlideContainer>
 
       {/* フッター */}
-      <Box
-        flexDirection="column"
-        borderStyle="single"
-        borderTop
-        paddingTop={1}
-        paddingBottom={1}
-        paddingLeft={2}
-        paddingRight={2}
-      >
-        {/* プログレスバー */}
-        <Box marginBottom={1}>
-          <ProgressBar currentSlide={currentSlide} totalSlides={slides.length} />
-        </Box>
-
-        {/* ナビゲーション情報 */}
-        <Box justifyContent="space-between">
-          <Text>
-            Slide {currentSlide + 1} / {slides.length}
-          </Text>
-          <Text dimColor>← → Navigate | 0/9 First/Last | q Quit</Text>
-        </Box>
-      </Box>
+      <Footer currentSlide={currentSlide} totalSlides={slides.length} timer={timer} />
     </Box>
   )
 }

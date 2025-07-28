@@ -1,6 +1,6 @@
 import { useInput } from 'ink';
 import { useState } from 'react';
-export const useKeyboardNavigation = (totalSlides, onExit) => {
+export const useKeyboardNavigation = (totalSlides, onExit, timer) => {
     const [currentSlide, setCurrentSlide] = useState(0);
     useInput((input, key) => {
         // 終了
@@ -29,6 +29,14 @@ export const useKeyboardNavigation = (totalSlides, onExit) => {
         // 9キー: 最後のスライド
         if (input === '9') {
             setCurrentSlide(totalSlides - 1);
+        }
+        // tキー: タイマーのstart/stop切り替え
+        if (input === 't' && timer) {
+            timer.toggle();
+        }
+        // rキー: タイマーリセット
+        if (input === 'r' && timer) {
+            timer.reset();
         }
     });
     return { currentSlide };

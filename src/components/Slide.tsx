@@ -7,7 +7,7 @@ interface SlideProps {
   content: string
 }
 
-export const Slide: React.FC<SlideProps> = ({ title, content }) => {
+export const Slide: React.FC<SlideProps> = React.memo(({ title, content }) => {
   const processedContent = processContent(content)
 
   return (
@@ -23,4 +23,4 @@ export const Slide: React.FC<SlideProps> = ({ title, content }) => {
       <Box>{processedContent}</Box>
     </Box>
   )
-}
+})

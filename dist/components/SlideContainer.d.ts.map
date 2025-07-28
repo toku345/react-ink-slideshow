@@ -1,0 +1,1 @@
+{"version":3,"file":"SlideContainer.d.ts","sourceRoot":"","sources":["../../src/components/SlideContainer.tsx"],"names":[],"mappings":"AACA,OAAO,KAAK,MAAM,OAAO,CAAA;AAEzB,UAAU,mBAAmB;IAC3B,QAAQ,EAAE,KAAK,CAAC,SAAS,CAAA;IACzB,cAAc,EAAE,MAAM,CAAA;IACtB,aAAa,EAAE,MAAM,CAAA;IACrB,YAAY,EAAE,MAAM,CAAA;CACrB;AAID,eAAO,MAAM,cAAc,EAAE,KAAK,CAAC,EAAE,CAAC,mBAAmB,CAsBxD,CAAA"}

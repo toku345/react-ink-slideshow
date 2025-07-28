@@ -8,6 +8,9 @@ import { Slide } from './Slide.js'
 import { SlideContainer } from './SlideContainer.js'
 import { TitleSlide } from './TitleSlide.js'
 
+// フッターの高さを定数化（ボーダー、パディング、3行分のコンテンツ）
+const FOOTER_HEIGHT = 7
+
 interface SlideShowProps {
   slides: SlideData[]
 }
@@ -46,7 +49,6 @@ export const SlideShow: React.FC<SlideShowProps> = ({ slides }) => {
 
   const terminalHeight = stdout.rows || 30
   const terminalWidth = stdout.columns || 80
-  const footerHeight = 7
 
   return (
     <Box flexDirection="column" height={terminalHeight} width={terminalWidth}>
@@ -54,7 +56,7 @@ export const SlideShow: React.FC<SlideShowProps> = ({ slides }) => {
       <SlideContainer
         terminalHeight={terminalHeight}
         terminalWidth={terminalWidth}
-        footerHeight={footerHeight}
+        footerHeight={FOOTER_HEIGHT}
       >
         {slideContent}
       </SlideContainer>

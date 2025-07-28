@@ -9,7 +9,7 @@ interface UseKeyboardNavigationReturn {
 export const useKeyboardNavigation = (
   totalSlides: number,
   onExit?: () => void,
-  timer?: UseTimerReturn,
+  timer?: UseTimerReturn | undefined,
 ): UseKeyboardNavigationReturn => {
   const [currentSlide, setCurrentSlide] = useState(0)
 

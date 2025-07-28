@@ -113,4 +113,27 @@ describe('Footer', () => {
     expect(frame).toContain('Timer:')
     expect(frame).toContain('Slide 2 / 3')
   })
+
+  it('要素が正しい順序で表示される', () => {
+    const { lastFrame } = render(
+      <Footer currentSlide={1} totalSlides={3} timer={mockTimer} />,
+    )
+
+    const frame = lastFrame()
+    if (!frame) throw new Error('Frame is undefined')
+    const lines = frame.split('\n')
+
+    // プログレスバーが最初に表示される
+    const progressBarIndex = lines.findIndex((line) => line.includes('█'))
+    // スライド番号が次に表示される
+    const slideNumberIndex = lines.findIndex((line) => line.includes('Slide'))
+    // タイマーが最後に表示される
+    const timerIndex = lines.findIndex((line) => line.includes('Timer:'))
+
+    expect(progressBarIndex).toBeGreaterThan(-1)
+    expect(slideNumberIndex).toBeGreaterThan(-1)
+    expect(timerIndex).toBeGreaterThan(-1)
+    expect(progressBarIndex).toBeLessThan(slideNumberIndex)
+    expect(slideNumberIndex).toBeLessThan(timerIndex)
+  })
 })

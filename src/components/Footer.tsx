@@ -28,20 +28,20 @@ export const Footer: React.FC<FooterProps> = React.memo(({ currentSlide, totalSl
         <ProgressBar currentSlide={currentSlide} totalSlides={totalSlides} />
       </Box>
 
-      {/* タイマー表示 */}
-      <Box marginBottom={1}>
-        <OptimizedTimerDisplay
-          remainingSeconds={timer.remainingSeconds}
-          isRunning={timer.isRunning}
-        />
-      </Box>
-
       {/* ナビゲーション情報 */}
-      <Box justifyContent="space-between">
+      <Box justifyContent="space-between" marginBottom={1}>
         <Text>
           Slide {currentSlide + 1} / {totalSlides}
         </Text>
         <Text dimColor>← → Navigate | 0/9 First/Last | t Timer | r Reset | q Quit</Text>
+      </Box>
+
+      {/* タイマー表示 */}
+      <Box>
+        <OptimizedTimerDisplay
+          remainingSeconds={timer.remainingSeconds}
+          isRunning={timer.isRunning}
+        />
       </Box>
     </Box>
   )

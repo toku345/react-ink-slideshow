@@ -24,6 +24,30 @@
     npm install react ink
     ```
 
+- title: 宣言的アプローチって何？
+  content: |
+    ### 🔧 **手続き的アプローチ**（従来のCLI）
+    「**どうやって**作るか」を細かく指示
+
+    ```javascript
+    // 画面をクリアして...
+    process.stdout.write('\033[2J\033[0f');
+    // 新しい値を表示して...
+    console.log(`カウンター: ${counter}`);
+    ```
+
+    ### ✨ **宣言的アプローチ**（React Ink）
+    「**何を**表示したいか」だけ宣言
+
+    ```jsx
+    // こう表示したい！と宣言するだけ
+    return <Text>カウンター: {counter}</Text>;
+    ```
+
+    **例えると...**
+    🍛 **手続き的**：料理のレシピを全部書く（鍋に水を入れて...）
+    🍛 **宣言的**：「カレーが欲しい！」と言うだけ
+
 - title: 従来のCLI開発 → React Inkでどう変わる？
   content: |
     ### 🚨 **従来の課題**
@@ -44,11 +68,11 @@
   content: |
     ### 有名CLIツールでの採用実績
 
-    • **claude code** - Anthropic社のCLIツール
-    • **gemini cli** - Google社のAI CLIツール
-    • **codex cli** - OpenAI関連ツール
-    • **Gatsby CLI** - 静的サイトジェネレータ
-    • **Shopify CLI** - EC開発ツール
+    • **Claude Code** - Anthropic社のAIコーディング支援ツール
+    • **Gemini CLI** - Google社のAIコーディング支援ツール
+    • **OpenAI Codex CLI** - OpenAI社のAIコーディング支援ツール
+    • **Terraform CDK** - HashiCorpのインフラ構築ツール
+    • **Shopify CLI** - Shopifyアプリ・テーマ開発ツール
 
     **→ 大手企業が本格採用している実績あり**
 

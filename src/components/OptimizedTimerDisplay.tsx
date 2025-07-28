@@ -6,6 +6,13 @@ interface OptimizedTimerDisplayProps {
   isRunning: boolean
 }
 
+// 純粋関数としてコンポーネント外に移動
+const formatTime = (seconds: number): string => {
+  const minutes = Math.floor(seconds / 60)
+  const secs = seconds % 60
+  return `${minutes}:${secs.toString().padStart(2, '0')}`
+}
+
 // タイマー表示を独立したコンポーネントで管理
 // 点滅アニメーションを最適化
 export const OptimizedTimerDisplay: React.FC<OptimizedTimerDisplayProps> = React.memo(
@@ -14,9 +21,13 @@ export const OptimizedTimerDisplay: React.FC<OptimizedTimerDisplayProps> = React
     const flashIntervalRef = useRef<NodeJS.Timeout | null>(null)
 
     useEffect(() => {
-      if (remainingSeconds === 0) {
+      let isMounted = true
+
+      if (remainingSeconds === 0 && isMounted) {
         flashIntervalRef.current = setInterval(() => {
-          setIsFlashing((prev) => !prev)
+          if (isMounted) {
+            setIsFlashing((prev) => !prev)
+          }
         }, 500)
       } else {
         if (flashIntervalRef.current) {
@@ -27,17 +38,12 @@ export const OptimizedTimerDisplay: React.FC<OptimizedTimerDisplayProps> = React
       }
 
       return () => {
+        isMounted = false
         if (flashIntervalRef.current) {
           clearInterval(flashIntervalRef.current)
         }
       }
     }, [remainingSeconds])
-
-    const formatTime = (seconds: number): string => {
-      const minutes = Math.floor(seconds / 60)
-      const secs = seconds % 60
-      return `${minutes}:${secs.toString().padStart(2, '0')}`
-    }
 
     const timeDisplay = formatTime(remainingSeconds)
     const statusText = isRunning ? '▶' : '⏸'

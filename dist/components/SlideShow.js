@@ -7,6 +7,8 @@ import { Footer } from './Footer.js';
 import { Slide } from './Slide.js';
 import { SlideContainer } from './SlideContainer.js';
 import { TitleSlide } from './TitleSlide.js';
+// フッターの高さを定数化（ボーダー、パディング、3行分のコンテンツ）
+const FOOTER_HEIGHT = 7;
 export const SlideShow = ({ slides }) => {
     const { exit } = useApp();
     const { stdout } = useStdout();
@@ -28,6 +30,5 @@ export const SlideShow = ({ slides }) => {
     }
     const terminalHeight = stdout.rows || 30;
     const terminalWidth = stdout.columns || 80;
-    const footerHeight = 7;
-    return (_jsxs(Box, { flexDirection: "column", height: terminalHeight, width: terminalWidth, children: [_jsx(SlideContainer, { terminalHeight: terminalHeight, terminalWidth: terminalWidth, footerHeight: footerHeight, children: slideContent }), _jsx(Footer, { currentSlide: currentSlide, totalSlides: slides.length, timer: timer })] }));
+    return (_jsxs(Box, { flexDirection: "column", height: terminalHeight, width: terminalWidth, children: [_jsx(SlideContainer, { terminalHeight: terminalHeight, terminalWidth: terminalWidth, footerHeight: FOOTER_HEIGHT, children: slideContent }), _jsx(Footer, { currentSlide: currentSlide, totalSlides: slides.length, timer: timer })] }));
 };

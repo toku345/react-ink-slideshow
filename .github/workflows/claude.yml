@@ -65,7 +65,7 @@ jobs:
           
           # Optional: Allow Claude to run specific commands
           # Allow Claude to run npm commands for dependency installation, testing, and linting
-          allowed_tools: "Bash(npm install:*),Bash(npm run:*),Bash(npm test:*),Bash(npm run build),Bash(npm run typecheck),Bash(npm run lint),Bash(npm run format),Bash(npm run check),Bash(npm run dev),Bash(npm run test)"
+          allowed_tools: "Bash(npm install:*),Bash(npm run:*),Bash(npm test:*),Bash(npm run build),Bash(npm run typecheck),Bash(npm run lint),Bash(npm run format),Bash(npm run check),Bash(npm run dev),Bash(npm run test),Bash(gh issue create),Bash(gh issue view:*),Bash(gh issue list),Bash(gh issue comment:*)"
           
           # Optional: Add custom instructions for Claude to customize its behavior for your project
           custom_instructions: |

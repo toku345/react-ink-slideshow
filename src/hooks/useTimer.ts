@@ -43,25 +43,41 @@ export const useTimer = (durationSeconds = DEFAULT_DURATION_SECONDS): UseTimerRe
 
   useEffect(() => {
     if (isRunning && remainingSeconds > 0) {
-      intervalRef.current = setInterval(() => {
-        setRemainingSeconds((prev) => {
-          if (prev <= 1) {
-            setIsRunning(false)
-            return 0
-          }
-          return prev - 1
-        })
-      }, 1000)
+      try {
+        intervalRef.current = setInterval(() => {
+          setRemainingSeconds((prev) => {
+            if (prev <= 1) {
+              setIsRunning(false)
+              return 0
+            }
+            return prev - 1
+          })
+        }, 1000)
+      } catch (error) {
+        // setIntervalが失敗した場合
+        console.error('Failed to start timer interval:', error)
+        setIsRunning(false)
+      }
     } else {
       if (intervalRef.current) {
-        clearInterval(intervalRef.current)
-        intervalRef.current = null
+        try {
+          clearInterval(intervalRef.current)
+        } catch (error) {
+          // clearIntervalが失敗しても続行
+          console.error('Failed to clear timer interval:', error)
+        } finally {
+          intervalRef.current = null
+        }
       }
     }
 
     return () => {
       if (intervalRef.current) {
-        clearInterval(intervalRef.current)
+        try {
+          clearInterval(intervalRef.current)
+        } catch (error) {
+          console.error('Failed to clear timer interval on cleanup:', error)
+        }
       }
     }
   }, [isRunning, remainingSeconds])

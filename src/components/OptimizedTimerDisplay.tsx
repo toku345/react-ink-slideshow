@@ -6,6 +6,9 @@ interface OptimizedTimerDisplayProps {
   isRunning: boolean
 }
 
+// 定数定義
+const FLASH_INTERVAL_MS = 500
+
 // 純粋関数としてコンポーネント外に移動
 const formatTime = (seconds: number): string => {
   const minutes = Math.floor(seconds / 60)
@@ -24,15 +27,27 @@ export const OptimizedTimerDisplay: React.FC<OptimizedTimerDisplayProps> = React
       let isMounted = true
 
       if (remainingSeconds === 0 && isMounted) {
-        flashIntervalRef.current = setInterval(() => {
-          if (isMounted) {
-            setIsFlashing((prev) => !prev)
-          }
-        }, 500)
+        try {
+          flashIntervalRef.current = setInterval(() => {
+            if (isMounted) {
+              setIsFlashing((prev) => !prev)
+            }
+          }, FLASH_INTERVAL_MS)
+        } catch (error) {
+          // setIntervalが失敗した場合のフォールバック
+          console.error('Failed to start flash interval:', error)
+          setIsFlashing(false)
+        }
       } else {
         if (flashIntervalRef.current) {
-          clearInterval(flashIntervalRef.current)
-          flashIntervalRef.current = null
+          try {
+            clearInterval(flashIntervalRef.current)
+          } catch (error) {
+            // clearIntervalが失敗しても続行
+            console.error('Failed to clear flash interval:', error)
+          } finally {
+            flashIntervalRef.current = null
+          }
         }
         setIsFlashing(false)
       }
@@ -40,7 +55,11 @@ export const OptimizedTimerDisplay: React.FC<OptimizedTimerDisplayProps> = React
       return () => {
         isMounted = false
         if (flashIntervalRef.current) {
-          clearInterval(flashIntervalRef.current)
+          try {
+            clearInterval(flashIntervalRef.current)
+          } catch (error) {
+            console.error('Failed to clear flash interval on cleanup:', error)
+          }
         }
       }
     }, [remainingSeconds])

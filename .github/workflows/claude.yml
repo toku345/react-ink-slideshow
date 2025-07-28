@@ -68,10 +68,16 @@ jobs:
           allowed_tools: "Bash(npm install:*),Bash(npm run:*),Bash(npm test:*),Bash(npm run build),Bash(npm run typecheck),Bash(npm run lint),Bash(npm run format),Bash(npm run check),Bash(npm run dev),Bash(npm run test)"
           
           # Optional: Add custom instructions for Claude to customize its behavior for your project
-          # custom_instructions: |
-          #   Follow our coding standards
-          #   Ensure all new code has tests
-          #   Use TypeScript for new files
+          custom_instructions: |
+            Follow our coding standards
+            Ensure all new code has tests
+            Use TypeScript for new files
+            
+            # GitHub Issue作成に関するルール
+            - Issueの作成はユーザーから明示的に指示された場合のみ行うこと
+            - 新規Issueの作成のみ許可（既存Issueの更新・削除は禁止）
+            - Issueへの対応者（assignee）のアサインは行わないこと
+            - Issueのクローズ・再オープンは行わないこと
           
           # Optional: Custom environment variables for Claude
           # claude_env: |

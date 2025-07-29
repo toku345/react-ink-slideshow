@@ -1,18 +1,29 @@
-import { Box, Text } from 'ink'
+import { Box, Text, useInput } from 'ink'
 import React from 'react'
-import type { UseTimerReturn } from '../hooks/useTimer.js'
+import { useTimer } from '../hooks/useTimer.js'
 import { OptimizedTimerDisplay } from './OptimizedTimerDisplay.js'
 import { ProgressBar } from './ProgressBar.js'
 
 interface FooterProps {
   currentSlide: number
   totalSlides: number
-  timer: UseTimerReturn
 }
 
 // フッターコンポーネントを分離してメモ化
 // タイマー更新時にスライド本体が再レンダリングされるのを防ぐ
-export const Footer: React.FC<FooterProps> = React.memo(({ currentSlide, totalSlides, timer }) => {
+export const Footer: React.FC<FooterProps> = React.memo(({ currentSlide, totalSlides }) => {
+  // タイマーをFooter内で直接管理し、親コンポーネントへの影響を防ぐ
+  const timer = useTimer()
+
+  // タイマー操作のキーボード入力をFooter内で処理
+  useInput((input) => {
+    if (input === 't') {
+      timer.toggle()
+    }
+    if (input === 'r') {
+      timer.reset()
+    }
+  })
   return (
     <Box
       flexDirection="column"

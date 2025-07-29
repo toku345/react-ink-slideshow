@@ -1,6 +1,6 @@
 import { useInput } from 'ink';
 import { useState } from 'react';
-export const useKeyboardNavigation = (totalSlides, onExit, timer) => {
+export const useKeyboardNavigation = (totalSlides, onExit) => {
     const [currentSlide, setCurrentSlide] = useState(0);
     useInput((input, key) => {
         // 終了
@@ -30,14 +30,7 @@ export const useKeyboardNavigation = (totalSlides, onExit, timer) => {
         if (input === '9') {
             setCurrentSlide(totalSlides - 1);
         }
-        // tキー: タイマーのstart/stop切り替え
-        if (input === 't' && timer) {
-            timer.toggle();
-        }
-        // rキー: タイマーリセット
-        if (input === 'r' && timer) {
-            timer.reset();
-        }
+        // タイマー操作はFooterコンポーネント内で処理される
     });
     return { currentSlide };
 };

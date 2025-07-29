@@ -1,5 +1,5 @@
 import { Box, Text } from 'ink'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useLayoutEffect, useRef, useState } from 'react'
 
 interface OptimizedTimerDisplayProps {
   remainingSeconds: number
@@ -23,7 +23,7 @@ export const OptimizedTimerDisplay: React.FC<OptimizedTimerDisplayProps> = React
     const [isFlashing, setIsFlashing] = useState(false)
     const flashIntervalRef = useRef<NodeJS.Timeout | null>(null)
 
-    useEffect(() => {
+    useLayoutEffect(() => {
       let isMounted = true
 
       if (remainingSeconds === 0 && isMounted) {

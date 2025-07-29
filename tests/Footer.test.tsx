@@ -1,11 +1,14 @@
 import React from 'react'
 import { render } from 'ink-testing-library'
-import { describe, expect, it, vi } from 'vitest'
+import { describe, expect, it, vi, beforeEach } from 'vitest'
 import { Footer } from '../src/components/Footer.js'
-import type { UseTimerReturn } from '../src/hooks/useTimer.js'
+import * as useTimerModule from '../src/hooks/useTimer.js'
+
+// useTimerフックをモック
+vi.mock('../src/hooks/useTimer.js')
 
 describe('Footer', () => {
-  const mockTimer: UseTimerReturn = {
+  const mockTimer = {
     remainingSeconds: 300,
     isRunning: false,
     start: vi.fn(),
@@ -14,9 +17,14 @@ describe('Footer', () => {
     reset: vi.fn(),
   }
 
+  // 各テストの前にモックをセットアップ
+  beforeEach(() => {
+    vi.mocked(useTimerModule.useTimer).mockReturnValue(mockTimer)
+  })
+
   it('現在のスライド番号と総数を表示する', () => {
     const { lastFrame } = render(
-      <Footer currentSlide={2} totalSlides={5} timer={mockTimer} />,
+      <Footer currentSlide={2} totalSlides={5} />,
     )
 
     expect(lastFrame()).toContain('Slide 3 / 5')
@@ -24,7 +32,7 @@ describe('Footer', () => {
 
   it('ナビゲーションヘルプを表示する', () => {
     const { lastFrame } = render(
-      <Footer currentSlide={0} totalSlides={10} timer={mockTimer} />,
+      <Footer currentSlide={0} totalSlides={10} />,
     )
 
     const frame = lastFrame()
@@ -37,7 +45,7 @@ describe('Footer', () => {
 
   it('プログレスバーを表示する', () => {
     const { lastFrame } = render(
-      <Footer currentSlide={0} totalSlides={4} timer={mockTimer} />,
+      <Footer currentSlide={0} totalSlides={4} />,
     )
 
     // プログレスバーの存在を確認（シアン色のブロック）
@@ -46,7 +54,7 @@ describe('Footer', () => {
 
   it('タイマー表示を含む', () => {
     const { lastFrame } = render(
-      <Footer currentSlide={0} totalSlides={1} timer={mockTimer} />,
+      <Footer currentSlide={0} totalSlides={1} />,
     )
 
     const frame = lastFrame()
@@ -55,14 +63,15 @@ describe('Footer', () => {
   })
 
   it('タイマーが動作中の場合は再生アイコンを表示', () => {
-    const runningTimer: UseTimerReturn = {
+    // このテスト用にモックを更新
+    vi.mocked(useTimerModule.useTimer).mockReturnValue({
       ...mockTimer,
       isRunning: true,
       remainingSeconds: 125, // 2:05
-    }
+    })
 
     const { lastFrame } = render(
-      <Footer currentSlide={0} totalSlides={1} timer={runningTimer} />,
+      <Footer currentSlide={0} totalSlides={1} />,
     )
 
     const frame = lastFrame()
@@ -71,14 +80,15 @@ describe('Footer', () => {
   })
 
   it('タイマーが停止中の場合は一時停止アイコンを表示', () => {
-    const stoppedTimer: UseTimerReturn = {
+    // このテスト用にモックを更新
+    vi.mocked(useTimerModule.useTimer).mockReturnValue({
       ...mockTimer,
       isRunning: false,
       remainingSeconds: 60, // 1:00
-    }
+    })
 
     const { lastFrame } = render(
-      <Footer currentSlide={0} totalSlides={1} timer={stoppedTimer} />,
+      <Footer currentSlide={0} totalSlides={1} />,
     )
 
     const frame = lastFrame()
@@ -87,14 +97,15 @@ describe('Footer', () => {
   })
 
   it('タイマーが0秒の場合の表示', () => {
-    const zeroTimer: UseTimerReturn = {
+    // このテスト用にモックを更新
+    vi.mocked(useTimerModule.useTimer).mockReturnValue({
       ...mockTimer,
       remainingSeconds: 0,
       isRunning: false,
-    }
+    })
 
     const { lastFrame } = render(
-      <Footer currentSlide={0} totalSlides={1} timer={zeroTimer} />,
+      <Footer currentSlide={0} totalSlides={1} />,
     )
 
     expect(lastFrame()).toContain('0:00')
@@ -102,7 +113,7 @@ describe('Footer', () => {
 
   it('全ての要素が正しくレイアウトされている', () => {
     const { lastFrame } = render(
-      <Footer currentSlide={1} totalSlides={3} timer={mockTimer} />,
+      <Footer currentSlide={1} totalSlides={3} />,
     )
 
     const frame = lastFrame()
@@ -116,7 +127,7 @@ describe('Footer', () => {
 
   it('要素が正しい順序で表示される', () => {
     const { lastFrame } = render(
-      <Footer currentSlide={1} totalSlides={3} timer={mockTimer} />,
+      <Footer currentSlide={1} totalSlides={3} />,
     )
 
     const frame = lastFrame()

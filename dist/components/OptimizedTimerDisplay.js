@@ -1,6 +1,6 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { Box, Text } from 'ink';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useLayoutEffect, useRef, useState } from 'react';
 // 定数定義
 const FLASH_INTERVAL_MS = 500;
 // 純粋関数としてコンポーネント外に移動
@@ -14,7 +14,7 @@ const formatTime = (seconds) => {
 export const OptimizedTimerDisplay = React.memo(({ remainingSeconds, isRunning }) => {
     const [isFlashing, setIsFlashing] = useState(false);
     const flashIntervalRef = useRef(null);
-    useEffect(() => {
+    useLayoutEffect(() => {
         let isMounted = true;
         if (remainingSeconds === 0 && isMounted) {
             try {

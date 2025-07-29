@@ -1,5 +1,5 @@
 import { Box, Text } from 'ink'
-import React from 'react'
+import React, { useMemo } from 'react'
 import { processContent } from '../utils/contentProcessor.js'
 
 interface SlideProps {
@@ -8,7 +8,8 @@ interface SlideProps {
 }
 
 export const Slide: React.FC<SlideProps> = React.memo(({ title, content }) => {
-  const processedContent = processContent(content)
+  // processContentの結果をメモ化して、再計算を防ぐ
+  const processedContent = useMemo(() => processContent(content), [content])
 
   return (
     <Box flexDirection="column" padding={2} width="100%">

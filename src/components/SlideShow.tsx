@@ -1,7 +1,6 @@
 import { Box, Text, useApp, useStdout } from 'ink'
 import React, { useMemo } from 'react'
 import { useKeyboardNavigation } from '../hooks/useKeyboardNavigation.js'
-import { useTimer } from '../hooks/useTimer.js'
 import type { SlideData } from '../types/slide.js'
 import { Footer } from './Footer.js'
 import { Slide } from './Slide.js'
@@ -18,8 +17,7 @@ interface SlideShowProps {
 export const SlideShow: React.FC<SlideShowProps> = ({ slides }) => {
   const { exit } = useApp()
   const { stdout } = useStdout()
-  const timer = useTimer()
-  const { currentSlide } = useKeyboardNavigation(slides.length, exit, timer)
+  const { currentSlide } = useKeyboardNavigation(slides.length, exit)
 
   // スライドコンテンツをメモ化して、タイマー更新時の再レンダリングを防ぐ
   const slideContent = useMemo(() => {
@@ -62,7 +60,7 @@ export const SlideShow: React.FC<SlideShowProps> = ({ slides }) => {
       </SlideContainer>
 
       {/* フッター */}
-      <Footer currentSlide={currentSlide} totalSlides={slides.length} timer={timer} />
+      <Footer currentSlide={currentSlide} totalSlides={slides.length} />
     </Box>
   )
 }

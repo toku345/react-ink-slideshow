@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { DEFAULT_DURATION_SECONDS } from '../constants/timer.js'
 
 export interface UseTimerReturn {
   remainingSeconds: number
@@ -8,8 +9,6 @@ export interface UseTimerReturn {
   toggle: () => void
   reset: () => void
 }
-
-const DEFAULT_DURATION_SECONDS = 300 // 5分
 
 export const useTimer = (durationSeconds = DEFAULT_DURATION_SECONDS): UseTimerReturn => {
   // 負の値が渡された場合は0にする
@@ -55,7 +54,7 @@ export const useTimer = (durationSeconds = DEFAULT_DURATION_SECONDS): UseTimerRe
         }, 1000)
       } catch (error) {
         // setIntervalが失敗した場合
-        console.error('Failed to start timer interval:', error)
+        console.error('タイマーの開始に失敗しました。ページをリロードしてください:', error)
         setIsRunning(false)
       }
     } else {
@@ -64,7 +63,7 @@ export const useTimer = (durationSeconds = DEFAULT_DURATION_SECONDS): UseTimerRe
           clearInterval(intervalRef.current)
         } catch (error) {
           // clearIntervalが失敗しても続行
-          console.error('Failed to clear timer interval:', error)
+          console.error('タイマーの停止処理で問題が発生しましたが、動作に影響はありません:', error)
         } finally {
           intervalRef.current = null
         }
@@ -76,7 +75,7 @@ export const useTimer = (durationSeconds = DEFAULT_DURATION_SECONDS): UseTimerRe
         try {
           clearInterval(intervalRef.current)
         } catch (error) {
-          console.error('Failed to clear timer interval on cleanup:', error)
+          console.error('クリーンアップ時のタイマー停止で問題が発生しました:', error)
         }
       }
     }

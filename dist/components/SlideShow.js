@@ -2,7 +2,6 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { Box, Text, useApp, useStdout } from 'ink';
 import { useMemo } from 'react';
 import { useKeyboardNavigation } from '../hooks/useKeyboardNavigation.js';
-import { useTimer } from '../hooks/useTimer.js';
 import { Footer } from './Footer.js';
 import { Slide } from './Slide.js';
 import { SlideContainer } from './SlideContainer.js';
@@ -12,8 +11,7 @@ const FOOTER_HEIGHT = 7;
 export const SlideShow = ({ slides }) => {
     const { exit } = useApp();
     const { stdout } = useStdout();
-    const timer = useTimer();
-    const { currentSlide } = useKeyboardNavigation(slides.length, exit, timer);
+    const { currentSlide } = useKeyboardNavigation(slides.length, exit);
     // スライドコンテンツをメモ化して、タイマー更新時の再レンダリングを防ぐ
     const slideContent = useMemo(() => {
         if (slides.length === 0) {
@@ -30,5 +28,5 @@ export const SlideShow = ({ slides }) => {
     }
     const terminalHeight = stdout.rows || 30;
     const terminalWidth = stdout.columns || 80;
-    return (_jsxs(Box, { flexDirection: "column", height: terminalHeight, width: terminalWidth, children: [_jsx(SlideContainer, { terminalHeight: terminalHeight, terminalWidth: terminalWidth, footerHeight: FOOTER_HEIGHT, children: slideContent }), _jsx(Footer, { currentSlide: currentSlide, totalSlides: slides.length, timer: timer })] }));
+    return (_jsxs(Box, { flexDirection: "column", height: terminalHeight, width: terminalWidth, children: [_jsx(SlideContainer, { terminalHeight: terminalHeight, terminalWidth: terminalWidth, footerHeight: FOOTER_HEIGHT, children: slideContent }), _jsx(Footer, { currentSlide: currentSlide, totalSlides: slides.length })] }));
 };
